@@ -1,37 +1,18 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { Home } from "./pages/Home";
+import { Login } from "./pages/Login";
+import { SignUp } from "./pages/SignUp";
+import { ApiCheck } from "./components/common/ApiCheck";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-interface Item {
-  id: number;
-  name: string;
-}
-
-function App() {
-  const [items, setItems] = useState<Item[]>([]);
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('/api/items') // プロキシ設定を利用してリクエスト
-      .then(response => {
-        setItems(response.data);
-        setMessage('Data fetched successfully!');
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error.response ? error.response.data : error.message);
-        setMessage('Failed to fetch data.');
-      });
-  }, []);
-
+export const App = () => {
   return (
-    <div>
-      <h1>{message}</h1>
-      <ul>
-        {items.map(item => (
-          <li key={item.id}>{item.name}</li>
-        ))}
-      </ul>
-    </div>
+    <BrowserRouter future={{ v7_relativeSplatPath: true }}>
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/test" element={<ApiCheck />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
-
-export default App;
+};

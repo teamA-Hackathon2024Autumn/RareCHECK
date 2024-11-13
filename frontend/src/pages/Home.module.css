@@ -1,0 +1,14 @@
+.dashboadLayout {
+  display: grid;
+  place-content: center;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  flex-grow: 1;
+  width: 100%;
+  gap: 24px;
+}
+
+.dashboardItem {
+  background-color: white;
+  border-radius: 3%;
+}
