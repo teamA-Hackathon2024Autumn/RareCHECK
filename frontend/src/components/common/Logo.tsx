@@ -22,21 +22,21 @@ export const Logo = () => {
                   L 400 50
                   "
             stroke="#2B3C6F"
-            stroke-width="80"
+            strokeWidth="80"
             fill="none"
-            stroke-linecap="butt"
-            stroke-linejoin="miter"
+            strokeLinecap="butt"
+            strokeLinejoin="miter"
           />
           <circle cx="455" cy="0" r="40" fill="#FFD700" />
         </g>
         <text
           x="320"
           y="580"
-          font-family="Arial, sans-serif"
-          font-size="100"
+          fontFamily="Arial, sans-serif"
+          fontSize="100"
           fill="#2B3C6F"
-          text-anchor="middle"
-          font-weight="bold"
+          textAnchor="middle"
+          fontWeight="bold"
         >
           RareCHECK
         </text>
