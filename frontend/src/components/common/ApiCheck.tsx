@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Page } from "../../pages/Page";
+import { Page } from "../layout/Page";
 import { ApiTest } from "../../services/api";
 import Button from "@mui/material/Button";
 

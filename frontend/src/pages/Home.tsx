@@ -1,9 +1,9 @@
-import { Page } from "./Page";
+import { Page } from "../components/layout/Page";
 import styles from "./Home.module.css";
 
 export const Home = () => {
   return (
-    <Page>
+    <Page login={true}>
       <div className={styles.dashboadLayout}>
         <div
           className={styles.dashboardItem}

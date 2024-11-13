@@ -13,7 +13,7 @@ export const Header = () => {
           <Logo />
         </div>
         <div className={styles.headerButtonLayout}>
-          <Button variant="contained">ユーザー設定</Button>
+          <Button variant="contained">マイページ</Button>
           <Button variant="outlined">ログアウト</Button>
         </div>
       </div>
