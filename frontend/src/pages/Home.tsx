@@ -1,4 +1,5 @@
 import { Page } from "../components/layout/Page";
+import { QuestionButton } from "../components/common/QuestionButton";
 import styles from "./Home.module.css";
 
 export const Home = () => {
@@ -9,18 +10,16 @@ export const Home = () => {
           className={styles.dashboardItem}
           style={{
             gridColumn: "1 / 2",
-            gridRow: "1 / 3",
-            minHeight: "145px",
+            gridRow: "1 / 2",
           }}
         >
-          ユーザー名
+          <h3 className={styles.userName}>ユーザー名: RareCHECK@00期</h3>
         </div>
         <div
           className={styles.dashboardItem}
           style={{
             gridColumn: "2 / 2",
             gridRow: "1 / 7",
-            minHeight: "485px",
           }}
         >
           ランキング関係
@@ -29,8 +28,7 @@ export const Home = () => {
           className={styles.dashboardItem}
           style={{
             gridColumn: "1 / 2",
-            gridRow: "3 / 7",
-            // minHeight: "180px",
+            gridRow: "2 / 7",
           }}
         >
           お知らせ
@@ -40,20 +38,29 @@ export const Home = () => {
           style={{
             gridColumn: "2 / 2",
             gridRow: "7 / 13",
-            // minHeight: "485px",
           }}
         >
           学習状況
         </div>
         <div
-          className={styles.dashboardItem}
+          className={`${styles.dashboardItem} ${styles.questionsLayout}`}
           style={{
             gridColumn: "1 / 2",
             gridRow: "7 / 13",
-            // minHeight: "580px",
           }}
         >
-          問題関係
+          <QuestionButton variant="contained" size="large">
+            問題演習
+          </QuestionButton>
+          <QuestionButton variant="contained" size="large">
+            問題作成
+          </QuestionButton>
+          <QuestionButton variant="outlined" size="large">
+            問題一覧
+          </QuestionButton>
+          <QuestionButton variant="outlined" size="large">
+            作成した問題一覧
+          </QuestionButton>
         </div>
       </div>
     </Page>
