@@ -25,7 +25,9 @@
   padding: 48px;
 }
 
-/* 管理者ホーム画面 */
+/* 
+  管理者ホーム画面
+ */
 .adminHomeFrame {
   display: flex;
   justify-content: center;
@@ -62,10 +64,18 @@
 .buttonLayout {
   background-color: white;
   margin-top: 2%;
-  height: 140px;
+  height: 200px;
   width: 700px;
   border-radius: 3%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
+}
+
+.buttonArea {
+  width: 80%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  gap: 80px;
 }
