@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Page } from "../layout/Page";
 import { ApiTest } from "../../services/api";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 
 interface Item {
   id: number;
@@ -25,7 +25,7 @@ export const ApiCheck = () => {
   };
 
   return (
-    <Page>
+    <Page login={false}>
       <div
         style={{
           display: "flex",

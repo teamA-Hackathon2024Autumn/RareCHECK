@@ -1,6 +1,6 @@
-import Button from "@mui/material/Button";
 import styles from "./Header.module.css";
 import { Logo } from "../common/Logo";
+import { Button } from "@mui/material";
 
 export const Header = () => {
   return (
