@@ -63,6 +63,9 @@ CREATE TABLE learning_records (
     FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
+INSERT INTO categories (category_name) VALUES ('インフラ'),('プログラミング'),('ウェブシステム'),('アーキテクティング'),('セキュリティ'),('AI/データサイエンス'),('UI/UX'),('ビジネススキル'),('その他');
+
+
 -- 疎通確認用
 -- CREATE TABLE IF NOT EXISTS item (
 --     id INT AUTO_INCREMENT PRIMARY KEY,
