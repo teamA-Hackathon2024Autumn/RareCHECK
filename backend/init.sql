@@ -11,6 +11,11 @@ CREATE TABLE users (
     is_admin BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE categories (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    category_name VARCHAR(255) UNIQUE NOT NULL
+);
+
 -- 疎通確認用
 -- CREATE TABLE IF NOT EXISTS item (
 --     id INT AUTO_INCREMENT PRIMARY KEY,
