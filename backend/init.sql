@@ -38,6 +38,31 @@ CREATE TABLE questions (
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+CREATE TABLE rankings (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    date TIMESTAMP NOT NULL,
+    _1st VARCHAR(255),
+    _2nd VARCHAR(255),
+    _3rd VARCHAR(255),
+    _4th VARCHAR(255),
+    _5th VARCHAR(255),
+    _6th VARCHAR(255),
+    _7th VARCHAR(255),
+    _8th VARCHAR(255),
+    _9th VARCHAR(255),
+    _10th VARCHAR(255)
+);
+
+CREATE TABLE learning_records (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_solved BOOLEAN DEFAULT FALSE,
+    user_id INTEGER NOT NULL,
+    question_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+);
+
 -- 疎通確認用
 -- CREATE TABLE IF NOT EXISTS item (
 --     id INT AUTO_INCREMENT PRIMARY KEY,
