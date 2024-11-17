@@ -22,7 +22,7 @@ services:
     volumes:
       - ./backend:/app
     networks:
-      - app_network
+      - backend_network
     environment:
       - DATABASE_URI=mysql://user:password@db/rarecheck
     depends_on:
@@ -39,9 +39,10 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - app_network
+      - backend_network
     volumes:
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 networks:
   app_network:
+  backend_network:
