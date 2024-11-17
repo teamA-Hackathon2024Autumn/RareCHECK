@@ -23,4 +23,4 @@ def get_items():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # データベースの初期化
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=True, reloader_interval=5)
