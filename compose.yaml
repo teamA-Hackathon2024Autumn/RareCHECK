@@ -24,7 +24,7 @@ services:
     networks:
       - app_network
     environment:
-      - DATABASE_URI=mysql://user:password@db/dbname
+      - DATABASE_URI=mysql://user:password@db/rarecheck
     depends_on:
       - db
 
@@ -33,7 +33,7 @@ services:
     platform: linux/x86_64
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: dbname
+      MYSQL_DATABASE: rarecheck
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
