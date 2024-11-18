@@ -13,5 +13,9 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""), // リクエストパスの書き換え
       },
     },
+    watch: {
+      usePolling: true,
+      interval: 1000,
+    },
   },
 });
