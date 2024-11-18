@@ -14,8 +14,4 @@ RUN apt-get update && apt-get install -y iputils-ping iproute2 && rm -rf /var/li
 COPY . .
 
 # Flaskを起動
-<<<<<<< HEAD
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000", "--debug"]
-=======
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000", "--debug"]
->>>>>>> main
