@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)  # CORSを有効にする
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://user:password@db/dbname'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://user:password@db/rarecheck'
 db = SQLAlchemy(app)
 
 # データベースモデルの定義

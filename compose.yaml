@@ -9,7 +9,8 @@ services:
       - ./frontend:/app
       - /app/node_modules
     networks:
-      - app_network
+      app_network:
+        ipv4_address: 172.19.0.10  # 静的IPアドレスを指定
     depends_on:
       - backend
 
@@ -22,15 +23,19 @@ services:
     volumes:
       - ./backend:/app
     networks:
-      - backend_network
+      app_network:
+        ipv4_address: 172.19.0.11  # フロントエンドとは異なるIP
+      db_network:
+        ipv4_address: 172.20.0.2  # バックエンドサービス用
     environment:
       - DATABASE_URI=mysql://user:password@db/rarecheck
     depends_on:
       - db
 
   db:
-    image: mysql:5.7
-    platform: linux/x86_64
+    build:
+      context: ./db  # dbディレクトリをコンテキストとして使用
+      dockerfile: Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: rarecheck
@@ -39,10 +44,20 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - backend_network
+      db_network:
+        ipv4_address: 172.20.0.3  # 専用ネットワークでbackendと通信
     volumes:
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 networks:
   app_network:
-  backend_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+
+  db_network:  # 新しい専用ネットワーク
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

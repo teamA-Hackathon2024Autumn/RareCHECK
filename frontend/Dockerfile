@@ -7,6 +7,9 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 
+# ping と ip route をインストール
+RUN apt-get update && apt-get install -y iputils-ping iproute2 && rm -rf /var/lib/apt/lists/*
+
 # ソースコードをコピー
 COPY . .
 
