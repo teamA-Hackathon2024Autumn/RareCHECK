@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button } from "@mui/material";
 
 import styles from "./Exercise.module.css";
-import { Page } from "./Page";
+import { Page } from "../components/layout/Page";
 
 
 export const Exercise: React.FC = () => {
@@ -94,7 +94,7 @@ export const Exercise: React.FC = () => {
 
 
   return (
-    <Page>
+    <Page login={true}>
       <div className={styles.container}>
         {!isQuizComplete ? (
           <>

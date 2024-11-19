@@ -2,7 +2,7 @@
 // import { useEffect, useState } from "react";
 import { useState } from "react";
 
-import { Page } from "./Page";
+import { Page } from "../components/layout/Page";
 import styles from "./EditQuestion.module.css";
 // import axios from 'axios';
 import {  Alert, Stack, TextField, Box, Select, Button, FormControl, InputLabel, MenuItem } from "@mui/material";
@@ -14,7 +14,8 @@ export const EditQuestion:React.FC = () => {
   
   /*stateの初期値にするquizのデフォルト（axiosで取得できるようになったら不要）*/
   const defaultQuiz = {
-    step: '3',
+    id: '3',
+    step: 3,
     category:'その他',
     question: 'ターミナルでディレクトリを作成するlinuxコマンドは？',
     questionImage:'',
@@ -89,8 +90,7 @@ export const EditQuestion:React.FC = () => {
   }
 
   return(
-    <Page>
-
+    <Page login={true}>
       <div className={styles.container}>
         <h3>問題を確認・編集する</h3>
         <form>
@@ -109,7 +109,6 @@ export const EditQuestion:React.FC = () => {
                   id="step-select"
                   value={quiz.step}
                   label="Step"
-                  defaultValue=''
                   onChange={changeStep}
                 >
                   {steps.map((step) => {  
@@ -127,7 +126,6 @@ export const EditQuestion:React.FC = () => {
                     id="category-select"
                     value={quiz.category}
                     label="Step"
-                    defaultValue=''
                     onChange={changeCategory}
                   >
                     {categories.map((category) => {  

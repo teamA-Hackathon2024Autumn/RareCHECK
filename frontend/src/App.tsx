@@ -7,6 +7,8 @@ import { QuestionSelection } from "./pages/QuestionSelection";
 import { Exercise } from "./pages/Exercise";
 import { CreateQuestion } from "./pages/CreateQuestion";
 import { EditQuestion } from "./pages/EditQuestion";
+import { AdminQuestionCheck } from "./pages/AdminQuestionCheck";
+import { AdminQuestionEdit } from "./pages/AdminQuestionEdit";
 import { ApiCheck } from "./components/common/ApiCheck";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -23,6 +25,8 @@ export const App = () => {
         <Route path="/Exercise" element={<Exercise />} />
         <Route path="/CreateQuestion" element={<CreateQuestion />} />
         <Route path="/EditQuestion" element={<EditQuestion />} />
+        <Route path="/AdminQuestionCheck" element={<AdminQuestionCheck />} />
+        <Route path="/AdminQuestionEdit" element={<AdminQuestionEdit />} />
         <Route path="/test" element={<ApiCheck />} />
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Page } from "./Page";
+import { Page } from "../components/layout/Page";
 import styles from "./CreateQuestion.module.css";
 import {  Stack, TextField, Box, Select, Button, FormControl, InputLabel, MenuItem } from "@mui/material";
 // import { CollectionsFilled } from '@mui/icons-material';
@@ -21,7 +21,6 @@ export const CreateQuestion:React.FC = () => {
   };
   /*1~500までの配列*/
   const steps = Array.from({ length: 500 }, (_, i) => (i + 1).toString());
-  console.log(steps);
 
   const categories = ["インフラ", "プログラミング", "ウェブシステム", "セキュリティ","アーキテクティング", "AI/データサイエンス", "UI/UX", "ビジネススキル", "その他"];
 
@@ -38,7 +37,7 @@ export const CreateQuestion:React.FC = () => {
   }
 
   return(
-    <Page>
+    <Page login={true}>
       <div className={styles.container}>
         <h3>問題を新規作成</h3>
         <form>
@@ -71,7 +70,6 @@ export const CreateQuestion:React.FC = () => {
                     id="category-select"
                     value={quiz.category}
                     label="Step"
-                    defaultValue=''
                     onChange={selectCategory}
                   >
                     {categories.map((category) => {  

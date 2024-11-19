@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Page } from "./Page";
+import { Page } from "../components/layout/Page";
 import styles from "./QuestionSelection.module.css";
 import {  Box, Select, Button, FormControl, FormControlLabel, InputLabel, Checkbox, MenuItem, ListItemText, OutlinedInput, SelectChangeEvent} from "@mui/material";
 
@@ -44,11 +44,10 @@ export const QuestionSelection = () => {
 
 
   return (
-    <Page>
+    <Page login={true}>
       <div className={styles.container}>
         <h2>出題範囲を選択</h2>
         <form action="">
-
           <div className="step">
             <h3>ステップで絞り込む（０つ以上選択）</h3>
             <FormControl sx={{ width:500}}>
@@ -78,7 +77,7 @@ export const QuestionSelection = () => {
             <h3>カテゴリで絞り込む（０つ以上選択）</h3>
             {categories.map((category) => {
               return (
-                <FormControlLabel control={<Checkbox/>} label={category} />
+                <FormControlLabel key={category} control={<Checkbox/>} label={category} />
               );
             })}
             <hr/>           
@@ -88,7 +87,7 @@ export const QuestionSelection = () => {
             <h3>難易度で絞り込む（０つ以上選択）</h3>
             {difficultyLevels.map((difficultyLevel) => {
               return (
-                <FormControlLabel control={<Checkbox/>} label={difficultyLevel} />
+                <FormControlLabel key={difficultyLevel} control={<Checkbox/>} label={difficultyLevel} />
               );
             })}
             <hr/>
@@ -98,7 +97,7 @@ export const QuestionSelection = () => {
             <h3>出題数（１つ選択）</h3>
             {numberOfQuestions.map((numberOfQuestion) => {
               return (
-                <FormControlLabel control={<Checkbox/>} label={`${numberOfQuestion}問`} />
+                <FormControlLabel key={numberOfQuestion} control={<Checkbox/>} label={`${numberOfQuestion}問`} />
               );
             })}
           </div>
