@@ -1,6 +1,6 @@
-import Button from "@mui/material/Button";
 import styles from "./Header.module.css";
 import { Logo } from "../common/Logo";
+import { Button } from "@mui/material";
 
 export const Header = () => {
   return (
@@ -13,7 +13,7 @@ export const Header = () => {
           <Logo />
         </div>
         <div className={styles.headerButtonLayout}>
-          <Button variant="contained">ユーザー設定</Button>
+          <Button variant="contained">マイページ</Button>
           <Button variant="outlined">ログアウト</Button>
         </div>
       </div>

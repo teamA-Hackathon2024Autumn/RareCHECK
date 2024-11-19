@@ -21,9 +21,21 @@
   max-width: 1200px;
 }
 
+.loginHeaderLayout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  margin: auto;
+  padding: 0px 32px;
+  width: 100%;
+  max-width: 1200px;
+}
+
 .headerLogo {
   height: 60px;
   width: 60px;
+  margin-top: -8px;
 }
 
 .headerButtonLayout {

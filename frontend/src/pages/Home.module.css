@@ -1,3 +1,4 @@
+/* ユーザーホーム画面 */
 .dashboadLayout {
   display: grid;
   place-content: center;
@@ -6,9 +7,75 @@
   flex-grow: 1;
   width: 100%;
   gap: 24px;
+  margin-top: 24px;
+  max-height: 110vh;
 }
 
 .dashboardItem {
   background-color: white;
   border-radius: 3%;
+}
+
+.questionsLayout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 24px;
+  place-content: center;
+  padding: 48px;
+}
+
+/* 
+  管理者ホーム画面
+ */
+.adminHomeFrame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.userNameLayout {
+  background-color: white;
+  margin-top: 2%;
+  height: 80px;
+  width: 700px;
+  border-radius: 3%;
+  display: flex;
+  align-items: center;
+}
+
+.userName {
+  margin-left: 24px;
+}
+
+.noticeLayout {
+  background-color: white;
+  margin-top: 2%;
+  height: 280px;
+  width: 700px;
+  border-radius: 3%;
+}
+
+.noticeTitle {
+  margin-left: 24px;
+}
+
+.buttonLayout {
+  background-color: white;
+  margin-top: 2%;
+  height: 200px;
+  width: 700px;
+  border-radius: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonArea {
+  width: 80%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  gap: 80px;
 }
