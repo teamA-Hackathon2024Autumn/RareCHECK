@@ -103,12 +103,11 @@ export const Exercise: React.FC = () => {
             <img src={questions[currentQuestionIndex].explanationimage} alt="" />
             <div className={styles.buttonGroup}>
               {shuffledOptions.map((option, index) => (
-                <div>
+                <div key={option}>
                   <Button
                     variant="contained"
                     color="inherit" 
                     size="small"
-                    key={option}
                     onClick={() => handleClick(option)}
                     disabled={isAnswered}
                   >
