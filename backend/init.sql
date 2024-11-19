@@ -65,6 +65,7 @@ CREATE TABLE learning_records (
     FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser', 'test@email.com', 'testtest', TRUE);
 INSERT INTO categories (category_name) VALUES ('インフラ'),('プログラミング'),('ウェブシステム'),('アーキテクティング'),('セキュリティ'),('AI/データサイエンス'),('UI/UX'),('ビジネススキル'),('その他');
 
 
