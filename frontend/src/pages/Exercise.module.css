@@ -1,0 +1,14 @@
+.buttonGroup{
+  display:flex;
+  flex-direction: column;
+  row-gap: 1.5rem; 
+}
+
+.container{
+  background-color: #ffff;
+  border-radius: .5rem;
+  flex-direction: column;
+  padding:1.5rem;
+  width:80%;
+  align-self: center;
+}
