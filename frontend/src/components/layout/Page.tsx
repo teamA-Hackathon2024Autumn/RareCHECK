@@ -1,15 +1,17 @@
 import { ReactNode } from "react";
-import { Header } from "../components/layout/Header";
+import { Header } from "./Header";
+import { LoginHeader } from "./LoginHeader";
 import styles from "./Page.module.css";
 
 interface PageProps {
+  login: boolean;
   children: ReactNode;
 }
 
-export const Page = ({ children }: PageProps) => {
+export const Page = ({ login, children }: PageProps) => {
   return (
     <div className={styles.topScreenFrame}>
-      <Header />
+      {login ? <Header /> : <LoginHeader />}
       <main className={styles.mainArea}>
         <div className={styles.mainLayout}>{children}</div>
       </main>

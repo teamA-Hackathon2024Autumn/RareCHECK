@@ -1,53 +1,43 @@
-.homeScreenTop {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  justify-content: center;
-  align-items: center;
-}
-
-.mainArea {
-  flex-grow: 1;
-  display: flex;
-  background-color: rgb(245 247 248 / 1);
-  width: 100%;
-}
-
-.mainLayout {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: 104px auto 24px auto;
-  width: 100%;
-  max-width: 1200px;
-}
-
-.loginFrame {
+.userInfoFrame {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.loginLayout {
+.userInfoLayout {
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: white;
   margin-top: 2%;
-  height: 700px;
+  height: 520px;
   width: 700px;
   border-radius: 3%;
+}
+
+.sinupLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  margin-top: 2%;
+  height: 630px;
+  width: 700px;
+  border-radius: 3%;
+}
+
+.userInfoFormFrame {
+  width: 70%;
+}
+
+.title {
+  margin-top: 32px;
 }
 
 .logo {
   margin-top: 12px;
   height: 120px;
   width: 120px;
-}
-
-.loginFormFrame {
-  width: 70%;
 }
 
 .buttonFrame {
