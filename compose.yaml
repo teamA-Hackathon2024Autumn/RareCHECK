@@ -58,6 +58,7 @@ services:
       - app_network
     volumes:
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/my.cnf:/etc/mysql/conf.d/my.cnf:ro
 
 networks:
   app_network:
