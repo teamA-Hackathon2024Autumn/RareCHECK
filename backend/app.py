@@ -12,6 +12,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # sqlalchemyの初期化
 db.init_app(app)
 
+# 問題一覧表示
+@app.route('/rarecheck/questions', methods=['GET'])
+def get_questions():
+    questions = Question.query.all()
+    question = []
+    for q in questions:
+        question.append({
+            "id": q.id,
+            "question": q.question,
+            "step": q.step,
+            "created_at": q.created_at,
+            "comment": q.comment,
+            "is_accept": q.is_accept
+        })
+
+    return jsonify(question)
+
+
    
 # 問題作成
 @app.route('/rarecheck/questions/create', methods=['POST'])
