@@ -1,0 +1,30 @@
+.container {
+  background-color: #ffff;
+  border-radius: 0.5rem;
+  flex-direction: column;
+  row-gap: 1rem;
+  padding: 1.5rem;
+  width: 100%;
+  align-self: center;
+}
+
+.twoColumnLayout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.rightColumnLayout {
+  width: 50%;
+}
+
+.leftColumnLayout {
+  width: 50%;
+}
+
+.selectformLayout {
+  display: flex;
+  gap: 1rem;
+}
