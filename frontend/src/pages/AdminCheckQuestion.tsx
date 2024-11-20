@@ -3,14 +3,14 @@
 import { useState } from "react";
 
 import { Page } from "../components/layout/Page";
-import styles from "./AdminQuestionCheck.module.css";
+import styles from "./AdminCheckQuestion.module.css";
 // import axios from 'axios';
 import {  Checkbox, FormControlLabel, Stack, TextField, Box, Select, Button, FormControl, InputLabel, MenuItem } from "@mui/material";
 /* （コメント）mui/icons-materialを使うとエラーが出るので退避、package.jsonにも含めてみたが失敗*/
 /* import { CollectionsFilled } from '@mui/icons-material'; */
 
 
-export const AdminQuestionEdit:React.FC = () => {
+export const AdminCheckQuestion:React.FC = () => {
   
   /*stateの初期値にするquizのデフォルト（axiosで取得できるようになったら不要）*/
   const defaultQuiz = {
@@ -60,15 +60,11 @@ export const AdminQuestionEdit:React.FC = () => {
     setQuiz(newIsAccepted);
   };
 
-  const deleteQuestion = () => {
-
-  };
-
   return(
     <Page login={true}>
       <div className={styles.container}>
         <div>
-        <h3>問題を確認・編集する</h3>
+        <h3>問題を確認する</h3>
         </div>
         <div className="questionStatus">
         <>問題ID: {quiz.id}</>
@@ -214,11 +210,8 @@ export const AdminQuestionEdit:React.FC = () => {
                   )}
                 </Select>
               </FormControl>
-              <Stack spacing={2} className={styles.checkboxColumn}>
               <FormControlLabel className={styles.selectIsAccept} control={<Checkbox checked={quiz.isAccepted} onChange={changeIsAccepted} />} label="演習問題への掲載を承認する" />
-              <FormControlLabel className={styles.selectIsAccept} control={<Checkbox onChange={deleteQuestion} />} label="問題を削除する" />
-              </Stack>
-            </div>
+              </div>
               </Stack>
             </div>
           </div>

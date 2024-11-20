@@ -33,14 +33,6 @@ export const QuestionSelection = () => {
     );
   };
 
-  // const MenuProps = {
-  //   PaperProps: {
-  //     style: {
-  //       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-  //       width: 250,
-  //     },
-  //   },
-  // };
 
 
   return (
@@ -60,7 +52,6 @@ export const QuestionSelection = () => {
                 onChange={handleChange}
                 input={<OutlinedInput label="Tag" />}
                 renderValue={(selected: any) => selected.join(', ')}
-                // MenuProps={MenuProps}
               >
                 {stepGroups.map((stepGroup) => (
                   <MenuItem key={stepGroup} value={stepGroup}>

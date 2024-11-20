@@ -3,14 +3,14 @@
 import { useState } from "react";
 
 import { Page } from "../components/layout/Page";
-import styles from "./AdminQuestionCheck.module.css";
+import styles from "./AdminEditQuestion.module.css";
 // import axios from 'axios';
 import {  Checkbox, FormControlLabel, Stack, TextField, Box, Select, Button, FormControl, InputLabel, MenuItem } from "@mui/material";
 /* （コメント）mui/icons-materialを使うとエラーが出るので退避、package.jsonにも含めてみたが失敗*/
 /* import { CollectionsFilled } from '@mui/icons-material'; */
 
 
-export const AdminQuestionCheck:React.FC = () => {
+export const AdminEditQuestion:React.FC = () => {
   
   /*stateの初期値にするquizのデフォルト（axiosで取得できるようになったら不要）*/
   const defaultQuiz = {
@@ -60,6 +60,10 @@ export const AdminQuestionCheck:React.FC = () => {
     setQuiz(newIsAccepted);
   };
 
+  const deleteQuestion = () => {
+
+  };
+
   return(
     <Page login={true}>
       <div className={styles.container}>
@@ -82,7 +86,7 @@ export const AdminQuestionCheck:React.FC = () => {
                 {/*ステップの表示 */}
                 <TextField fullWidth
                   value={quiz.step}
-                  label="Step"
+                  label="ステップ"
                   variant="filled"
                   slotProps={{
                     input: {
@@ -93,7 +97,7 @@ export const AdminQuestionCheck:React.FC = () => {
                 {/*カテゴリの表示 */}
                 <TextField fullWidth
                   value={quiz.category}
-                  label="Category"
+                  label="カテゴリ"
                   variant="filled"
                   slotProps={{
                     input: {
@@ -210,8 +214,11 @@ export const AdminQuestionCheck:React.FC = () => {
                   )}
                 </Select>
               </FormControl>
+              <Stack spacing={2} className={styles.checkboxColumn}>
               <FormControlLabel className={styles.selectIsAccept} control={<Checkbox checked={quiz.isAccepted} onChange={changeIsAccepted} />} label="演習問題への掲載を承認する" />
-              </div>
+              <FormControlLabel className={styles.selectIsAccept} control={<Checkbox onChange={deleteQuestion} />} label="問題を削除する" />
+              </Stack>
+            </div>
               </Stack>
             </div>
           </div>

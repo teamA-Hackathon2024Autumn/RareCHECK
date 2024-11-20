@@ -7,13 +7,24 @@ import { Page } from "../components/layout/Page";
 
 
 export const Exercise: React.FC = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [shuffledOptions, setShuffledOptions] = useState<any[]>([]);
-  const [results, setResults] = useState<any[]>([]); 
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); //問題の配列を順番に取り出すためのステート　
+  const [selectedOption, setSelectedOption] = useState<string | null>(null); //回答した選択肢を保持するステート
+  const [isAnswered, setIsAnswered] = useState(false); //回答済みの問題かどうかを保持するステート
+  const [shuffledOptions, setShuffledOptions] = useState<any[]>([]); //選択肢の配列の中身をランダムに入れ替えたあとの状態を保持するステート
+  const [result, setResult] = useState({}); //１問ごとに回答の結果を格納し、APIで送信するためのステート
+  const [allResults, setAllResults] = useState<{ question: string; selectedOption: string; correctAnswer: string; id: string; isCorrect: boolean }[]>([]);
+  const [isQuizComplete, setIsQuizComplete] = useState(false);
+
+/*resultに格納するプロパティ
+問題id,isCorrrect,datetime
+*/
+
+/*allResultsに格納するオブジェクトの配列
+問題id,isCorrect
+*/
 
   interface Question {
+    id:string,
     question: string;
     options: string[];
     answer: string;
@@ -24,6 +35,7 @@ export const Exercise: React.FC = () => {
 
   const questions: Question[] = [
     {
+      id: '1',
       question: '日本の首都はどこですか？',
       options: ['東京', '大阪', '京都'],
       answer: '東京',
@@ -32,6 +44,7 @@ export const Exercise: React.FC = () => {
       explanationimage: '',
     },
     {
+      id: '2',
       question: '地球の衛星は何ですか？',
       options: ['月', '火星', '金星'],
       answer: '月',
@@ -40,6 +53,7 @@ export const Exercise: React.FC = () => {
       explanationimage: '',
     },
     {
+      id: '3',
       question: '最も大きな陸上動物は何ですか？',
       options: ['キリン', 'ゾウ', '馬'],
       answer: 'ゾウ',
@@ -56,10 +70,10 @@ export const Exercise: React.FC = () => {
   }, [currentQuestionIndex]);
 
   const shuffleArray = (array: string[]) => {
-    console.log(array.sort(() => Math.random() - 0.5));
     return array.sort(() => Math.random() - 0.5);
   };
 
+  //選んだ選択肢がanswerと一致するか（boolean）をisCorrectに格納
   const handleClick = async (option: string) => {
     const isCorrect = option === questions[currentQuestionIndex].answer;
     setSelectedOption(option);
@@ -70,17 +84,23 @@ export const Exercise: React.FC = () => {
       question: questions[currentQuestionIndex].question,
       selectedOption: option,
       correctAnswer: questions[currentQuestionIndex].answer,
+      id:questions[currentQuestionIndex].id,
       isCorrect: isCorrect,
     };
-     
+
+    setAllResults((allResults) => [...allResults, newResult])
+    setResult(newResult);
+    
 
     // 結果をAPIに保存
-    try {
+    const postResult = async() => {    
+      try {
       await axios.post('http://localhost:5000/submit', { newResult });
-      setResults((prevResults) => [...prevResults, newResult]);
+      console.log('post completed!')
     } catch (error) {
       console.error('Error saving result:', error);
-    }
+    }}
+    postResult();    
   };
   
   const handleNextQuestion = () => {
@@ -88,9 +108,19 @@ export const Exercise: React.FC = () => {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedOption(null);
       setIsAnswered(false);
-    }
-  };
-  const isQuizComplete = currentQuestionIndex >= questions.length;
+    } else{
+      setSelectedOption(null);
+      setIsAnswered(false);
+      }
+  }; 
+  
+  
+
+  // const isQuizComplete = currentQuestionIndex == questions.length;
+  const handleResult = () => {
+    allResults.length === questions.length && setIsQuizComplete(true)
+    
+  }
 
 
   return (
@@ -121,14 +151,24 @@ export const Exercise: React.FC = () => {
               <div>
                 <h3>{selectedOption === questions[currentQuestionIndex].answer ? '正解！' : '不正解！'}</h3>
                 <p>{questions[currentQuestionIndex].explanation}</p>
-                <img src={questions[currentQuestionIndex].questionimage} alt="" />           
-                <button
-                  onClick={handleNextQuestion}
-                  style={{ marginTop: '20px', padding: '10px' }}
-                  disabled={!isAnswered}
-                >
-                  次の問題へ
-                </button>
+                <img src={questions[currentQuestionIndex].questionimage} alt="" />
+                {allResults.length !== questions.length ? (
+                    <button
+                      onClick={handleNextQuestion}
+                      style={{ marginTop: '20px', padding: '10px' }}
+                      disabled={!isAnswered}
+                    >
+                      次の問題へ
+                    </button>
+                  ):(
+                    <button
+                      onClick={handleResult}
+                      style={{ marginTop: '20px', padding: '10px' }}
+                      disabled={!isAnswered}
+                    >
+                      演習結果へ
+                    </button>
+                    )}           
               </div>
             )}
           </>
@@ -136,19 +176,20 @@ export const Exercise: React.FC = () => {
           <div>
             <h2>すべての問題が終了しました！</h2>
             <h3>結果</h3>
-            <p>総回答数: {results.length}</p>
-            <p>正解数: {results.filter(result => result.isCorrect).length}</p>
+            <p>総回答数: {allResults.length}</p>
+            <p>正解数: {allResults.filter(result => result.isCorrect).length}</p>
             <h3>解いた問題の結果一覧:</h3>
             <ul>
-              {results.map((result, index) => (
-                <li key={index}>
+              {allResults.map((result) => (
+                <li key={result.id}>
                   <strong>問題:</strong> {result.question}<br />
                   <strong>選択肢:</strong> {result.selectedOption}<br />
                   <strong>正答:</strong> {result.correctAnswer}<br />
-                  <strong>結果:</strong> {result.isCorrect ? '正解' : '不正解'}
+                  <strong>結果:</strong> {result.isCorrect ? '◯' : '✕'}
                 </li>
               ))}
             </ul>
+            <Button variant="contained" size="large" sx={{borderRadius:50, alignItems:'center', backgroundColor:'#2563EB'}}>ホーム画面へ戻る</Button>
           </div>
         )}
       </div>
