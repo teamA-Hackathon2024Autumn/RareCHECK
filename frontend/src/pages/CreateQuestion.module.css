@@ -1,14 +1,14 @@
-.container{
+.container {
   background-color: #ffff;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   flex-direction: column;
   row-gap: 1rem;
-  padding:1.5rem;
-  width:60%;
+  padding: 1.5rem;
+  width: 60%;
   align-self: center;
 }
 
-.selectformLayout{
+.selectformLayout {
   display: flex;
   gap: 1rem;
 }
