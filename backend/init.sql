@@ -67,7 +67,8 @@ CREATE TABLE learning_records (
 
 INSERT INTO users (username, email, password, is_admin) VALUES ('testuser', 'test@email.com', 'testtest', TRUE);
 INSERT INTO categories (category_name) VALUES ('インフラ'),('プログラミング'),('ウェブシステム'),('アーキテクティング'),('セキュリティ'),('AI/データサイエンス'),('UI/UX'),('ビジネススキル'),('その他');
-
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, difficulty, user_id, category_id) VALUES (1, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', 1, 1, 1);
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, difficulty, user_id, category_id) VALUES (2, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', 1, 1, 1);
 
 -- 疎通確認用
 -- CREATE TABLE IF NOT EXISTS item (
