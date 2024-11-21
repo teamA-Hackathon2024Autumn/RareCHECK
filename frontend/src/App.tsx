@@ -4,7 +4,7 @@ import { SignUp } from "./pages/SignUp";
 import { UserInfo } from "./pages/UserInfo";
 import { AdminHome } from "./pages/AdminHome";
 import { QuestionSelection } from "./pages/QuestionSelection";
-import { Exercise } from "./pages/Exercise";
+import { Exercise } from "./pages/Exercise/Exercise";
 import { CreateQuestion } from "./pages/CreateQuestion";
 import { EditQuestion } from "./pages/EditQuestion";
 import { AdminCheckQuestion } from "./pages/AdminCheckQuestion";

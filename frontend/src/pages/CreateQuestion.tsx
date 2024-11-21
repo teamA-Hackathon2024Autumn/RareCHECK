@@ -12,7 +12,7 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
-// import { CollectionsFilled } from '@mui/icons-material';
+import CollectionsIcon from "@mui/icons-material/Collections";
 
 export const CreateQuestion: React.FC = () => {
   /*stetの初期値にするquizのデフォルト*/
@@ -120,7 +120,8 @@ export const CreateQuestion: React.FC = () => {
                 {/* 問題用画像のアップロード */}
                 <div>
                   <Button variant="contained" size="small" color="inherit">
-                    問題用画像をアップロード{/*<CollectionsFilled/>*/}
+                    問題用画像をアップロード
+                    <CollectionsIcon />
                   </Button>
                 </div>
               </div>
@@ -144,7 +145,8 @@ export const CreateQuestion: React.FC = () => {
                 {/* 解説用画像のアップロード */}
                 <div>
                   <Button variant="contained" size="small" color="inherit">
-                    解説用画像をアップロード{/*<CollectionsFilled/>*/}
+                    解説用画像をアップロード
+                    <CollectionsIcon />
                   </Button>
                 </div>
               </div>

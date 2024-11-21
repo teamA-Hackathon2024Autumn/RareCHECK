@@ -16,8 +16,6 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
-/* （コメント）mui/icons-materialを使うとエラーが出るので退避、package.jsonにも含めてみたが失敗*/
-/* import { CollectionsFilled } from '@mui/icons-material'; */
 
 export const AdminEditQuestion: React.FC = () => {
   /*stateの初期値にするquizのデフォルト（axiosで取得できるようになったら不要）*/
