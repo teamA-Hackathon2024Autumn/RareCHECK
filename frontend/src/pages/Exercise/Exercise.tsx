@@ -5,23 +5,22 @@ import { Box, Button } from "@mui/material";
 import styles from "./Exercise.module.css";
 import { Page } from "../../components/layout/Page";
 import { Result } from "./Result";
-import {questions} from "./SampleQuestions";
+import { questions } from "./SampleQuestions";
 
 export const Exercise: React.FC = () => {
-
-type Result = {
-  question: string,
-  selectedOption: string,
-  correctAnswer: string,
-  id: string,
-  isCorrect: boolean,
-  category: string
-  difficulty: string;
-  step?: number;
-};
+  type Result = {
+    question: string;
+    selectedOption: string;
+    correctAnswer: string;
+    id: string;
+    isCorrect: boolean;
+    category: string;
+    difficulty: string;
+    step?: number;
+  };
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); //問題の配列を順番に取り出すためのステート
-  const [selectedOption, setSelectedOption] = useState<string|null>(null); //回答した選択肢を保持するステート
+  const [selectedOption, setSelectedOption] = useState<string | null>(null); //回答した選択肢を保持するステート
   const [isAnswered, setIsAnswered] = useState(false); //回答済みの問題かどうかを保持するステート
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]); //選択肢の配列の中身をランダムに入れ替えたあとの状態を保持するステート
   const [result, setResult] = useState<Result>(); //１問ごとに回答の結果を格納し、APIで送信するためのステート
@@ -47,7 +46,7 @@ type Result = {
   };
 
   //選んだ選択肢がanswerと一致するか（boolean）をisCorrectに格納
-  const handleClick = async (option:string) => {
+  const handleClick = async (option: string) => {
     const isCorrect = option === questions[currentQuestionIndex].answer;
     setSelectedOption(option);
     setIsAnswered(true);
@@ -108,7 +107,9 @@ type Result = {
             <h3>
               問題演習（{currentQuestionIndex + 1}/{questions.length}）
             </h3>
-            <p className={styles.questionBox}>{questions[currentQuestionIndex].question}</p>
+            <p className={styles.questionBox}>
+              {questions[currentQuestionIndex].question}
+            </p>
             <img
               src={questions[currentQuestionIndex].explanationimage}
               alt=""
@@ -136,18 +137,25 @@ type Result = {
               <div>
                 {/* <div className={styles.corectAndWrongLayout}> */}
                 <div className={styles.correctAndWrongLayoutContainer}>
-                <p className={styles.corectAndWrongLayout}>
-                  <span className={styles.maruBatsuStyle}>
-                    {selectedOption === questions[currentQuestionIndex].answer 
-                    ? "◯ " 
-                    : "✕ "}
-                  </span>
-                  {selectedOption === questions[currentQuestionIndex].answer
-                    ? "正解！"
-                    : "不正解！"}
-                </p>
+                  <p className={styles.corectAndWrongLayout}>
+                    <span className={styles.maruBatsuStyle}>
+                      {selectedOption === questions[currentQuestionIndex].answer
+                        ? "◯ "
+                        : "✕ "}
+                    </span>
+                    {selectedOption === questions[currentQuestionIndex].answer
+                      ? "正解！"
+                      : "不正解！"}
+                  </p>
                 </div>
-                <p>正解: {getLabelForOption(shuffledOptions.indexOf(questions[currentQuestionIndex].answer))}</p>
+                <p>
+                  正解:{" "}
+                  {getLabelForOption(
+                    shuffledOptions.indexOf(
+                      questions[currentQuestionIndex].answer,
+                    ),
+                  )}
+                </p>
                 <p>解説：</p>
                 <p>{questions[currentQuestionIndex].explanation}</p>
                 <img
@@ -155,37 +163,37 @@ type Result = {
                   alt=""
                 />
                 {allResults.length !== questions.length ? (
-                <Box className="nextButton " textAlign="center" py={3}>
-                  <Button
-                    onClick={handleNextQuestion}
-                    disabled={!isAnswered}
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      borderRadius: 50,
-                      alignItems: "center",
-                      backgroundColor: "#2563EB",
-                    }}
-                  >
-                    次の問題へ
-                  </Button>
-                </Box>
+                  <Box className="nextButton " textAlign="center" py={3}>
+                    <Button
+                      onClick={handleNextQuestion}
+                      disabled={!isAnswered}
+                      variant="contained"
+                      size="large"
+                      sx={{
+                        borderRadius: 50,
+                        alignItems: "center",
+                        backgroundColor: "#2563EB",
+                      }}
+                    >
+                      次の問題へ
+                    </Button>
+                  </Box>
                 ) : (
-                <Box className="nextButton " textAlign="center" py={3}>
-                  <Button
-                    onClick={handleResult}
-                    disabled={!isAnswered}
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      borderRadius: 50,
-                      alignItems: "center",
-                      backgroundColor: "#2563EB",
-                    }}
-                  >
-                    演習結果へ
-                  </Button>
-                </Box>
+                  <Box className="nextButton " textAlign="center" py={3}>
+                    <Button
+                      onClick={handleResult}
+                      disabled={!isAnswered}
+                      variant="contained"
+                      size="large"
+                      sx={{
+                        borderRadius: 50,
+                        alignItems: "center",
+                        backgroundColor: "#2563EB",
+                      }}
+                    >
+                      演習結果へ
+                    </Button>
+                  </Box>
                 )}
               </div>
             )}
@@ -193,8 +201,8 @@ type Result = {
         ) : (
           <div>
             <div className={styles.resultLayout}>
-            <Result allResultsRows={allResults} />
-            <Box className="saveButton " textAlign="center" py={3}>
+              <Result allResultsRows={allResults} />
+              <Box className="saveButton " textAlign="center" py={3}>
                 <Button
                   variant="contained"
                   size="large"

@@ -13,32 +13,30 @@
   align-self: center;
 }
 .maruBatsuStyle {
-  color:red;
+  color: red;
   font-weight: bold;
 }
 
 .corectAndWrongLayout {
-  border:solid, 0.5px;
-  width:100px;
+  border: solid, 0.5px;
+  width: 100px;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding:0.5rem;
+  padding: 0.5rem;
   text-align: center;
 }
 
-.correctAndWrongLayoutContainer
-{
+.correctAndWrongLayoutContainer {
   display: flex;
   justify-content: center;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding:0.5rem;
+  padding: 0.5rem;
 }
 
-
-.questionBox{
-  border:solid, 0.5px;
+.questionBox {
+  border: solid, 0.5px;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding:1rem;
+  padding: 1rem;
 }

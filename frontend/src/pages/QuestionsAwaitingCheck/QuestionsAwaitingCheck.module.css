@@ -1,0 +1,10 @@
+.listContainer {
+  background-color: #ffff;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.numberOfQuestion {
+  font-size: 23px;
+  color: #05488f;
+}

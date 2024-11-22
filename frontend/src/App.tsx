@@ -9,6 +9,8 @@ import { CreateQuestion } from "./pages/CreateQuestion";
 import { EditQuestion } from "./pages/EditQuestion";
 import { AdminCheckQuestion } from "./pages/AdminCheckQuestion";
 import { AdminEditQuestion } from "./pages/AdminEditQuestion";
+import { QuestionsAwaitingCheck } from "./pages/QuestionsAwaitingCheck/QuestionsAwaitingCheck";
+import { AdminQuestionEdit } from "./pages/AdminQuestionEdit/AdminQuestionEdit";
 import { ApiCheck } from "./components/common/ApiCheck";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -27,6 +29,11 @@ export const App = () => {
         <Route path="/EditQuestion" element={<EditQuestion />} />
         <Route path="/AdminCheckQuestion" element={<AdminCheckQuestion />} />
         <Route path="/AdminEditQuestion" element={<AdminEditQuestion />} />
+        <Route
+          path="/QuestionsAwaitingCheck"
+          element={<QuestionsAwaitingCheck />}
+        />
+        <Route path="/AdminQuestionEdit" element={<AdminQuestionEdit />} />
         <Route path="/test" element={<ApiCheck />} />
       </Routes>
     </BrowserRouter>
