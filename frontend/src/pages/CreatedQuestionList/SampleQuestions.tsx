@@ -1,6 +1,6 @@
 export const createdQuestionRows = [
   {
-    id: "1",
+    id: 1,
     question: "コンピュータのCPUの役割は何ですか？",
     category: "コンピュータ",
     step: "",
@@ -9,7 +9,7 @@ export const createdQuestionRows = [
     isAccepted: true,
   },
   {
-    id: "2",
+    id: 2,
     question: "インターネットで使われるIPアドレスとは何ですか？",
     category: "ネットワーク",
     step: 5,
@@ -18,7 +18,7 @@ export const createdQuestionRows = [
     isAccepted: false,
   },
   {
-    id: "3",
+    id: 3,
     question: "HTMLとは何の略ですか？",
     category: "ウェブデザイン",
     step: 3,
@@ -27,7 +27,7 @@ export const createdQuestionRows = [
     isAccepted: true,
   },
   {
-    id: "4",
+    id: 4,
     question: "プログラミング言語Pythonの特徴は何ですか？",
     category: "プログラミング",
     step: 8,
@@ -36,7 +36,7 @@ export const createdQuestionRows = [
     isAccepted: false,
   },
   {
-    id: "5",
+    id: 5,
     question: "HTTPとHTTPSの違いは何ですか？",
     category: "セキュリティ",
     step: "",
@@ -45,7 +45,7 @@ export const createdQuestionRows = [
     isAccepted: true,
   },
   {
-    id: "6",
+    id: 6,
     question: "ウェブサイトにアクセスするためのドメイン名とは何ですか？",
     category: "インターネット",
     step: 7,
@@ -54,7 +54,7 @@ export const createdQuestionRows = [
     isAccepted: true,
   },
   {
-    id: "7",
+    id: 7,
     question: "プログラミング言語Javaの特徴は何ですか？",
     category: "プログラミング",
     step: 10,
@@ -63,7 +63,7 @@ export const createdQuestionRows = [
     isAccepted: false,
   },
   {
-    id: "8",
+    id: 8,
     question: "AIと機械学習の違いは何ですか？",
     category: "AI",
     step: 4,
@@ -72,7 +72,7 @@ export const createdQuestionRows = [
     isAccepted: true,
   },
   {
-    id: "9",
+    id: 9,
     question: "Gitとは何ですか？",
     category: "ツール",
     step: "",
@@ -81,7 +81,7 @@ export const createdQuestionRows = [
     isAccepted: true,
   },
   {
-    id: "10",
+    id: 10,
     question: "データベースの正規化とは何ですか？",
     category: "データベース",
     step: 9,

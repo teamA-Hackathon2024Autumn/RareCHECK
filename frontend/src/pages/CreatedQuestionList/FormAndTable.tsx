@@ -13,7 +13,14 @@ import { visuallyHidden } from "@mui/utils";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 
+// ソートのための比較関数
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
+  if (a[orderBy] === "" && b[orderBy] !== "") {
+    return 1; // 空文字の方を後ろに
+  }
+  if (b[orderBy] === "" && a[orderBy] !== "") {
+    return -1; // 空文字の方を後ろに
+  }
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -25,6 +32,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
 
 type Order = "asc" | "desc";
 
+// ソート処理の設定
 function getComparator<Key extends keyof CreatedQuestionData>(
   order: Order,
   orderBy: Key,
@@ -43,7 +51,7 @@ interface HeadCell {
 
 // 問題のオブジェクトの型定義
 export type CreatedQuestionData = {
-  id: string;
+  id: number;
   question: string;
   step: number | string;
   category: string;
@@ -59,36 +67,11 @@ type CreatedQuestionProps = {
 };
 
 const headCells: readonly HeadCell[] = [
-  {
-    id: "id",
-    numeric: false,
-    disablePadding: true,
-    label: "問題ID",
-  },
-  {
-    id: "question",
-    numeric: false,
-    disablePadding: false,
-    label: "問題",
-  },
-  {
-    id: "step",
-    numeric: true,
-    disablePadding: false,
-    label: "ステップ",
-  },
-  {
-    id: "category",
-    numeric: false,
-    disablePadding: false,
-    label: "カテゴリ",
-  },
-  {
-    id: "date",
-    numeric: false,
-    disablePadding: false,
-    label: "作成年月日",
-  },
+  { id: "id", numeric: true, disablePadding: true, label: "問題ID" },
+  { id: "question", numeric: false, disablePadding: false, label: "問題本文" },
+  { id: "step", numeric: true, disablePadding: false, label: "ステップ" },
+  { id: "category", numeric: false, disablePadding: false, label: "カテゴリ" },
+  { id: "date", numeric: false, disablePadding: false, label: "作成年月日" },
   {
     id: "hasComment",
     numeric: false,
@@ -101,12 +84,7 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "承認状況",
   },
-  {
-    id: "btn",
-    numeric: false,
-    disablePadding: false,
-    label: "",
-  },
+  { id: "btn", numeric: false, disablePadding: false, label: "" },
 ];
 
 interface EnhancedTableProps {
@@ -123,7 +101,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort(property);
   };
 
-  // テーブルのヘッダーのコンポーネント
   return (
     <TableHead>
       <TableRow>
@@ -133,12 +110,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ paddingLeft: 2 }}
+            sx={{ paddingLeft: 2, whiteSpace: "nowrap" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)} // ここで `event` は不要
+              onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -168,8 +145,7 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
     setOrderBy(property);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    console.log(event);
+  const handleChangePage = (newPage: number) => {
     setPage(newPage);
   };
 
@@ -192,7 +168,7 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
     return [...rows]
       .filter(
         (row) =>
-          row.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.id.toString().includes(searchQuery.toLowerCase()) ||
           row.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row.step.toString().includes(searchQuery.toLowerCase()) ||
           row.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -217,10 +193,8 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
         width: "100%",
       }}
     >
-      {/* タイトル、検索フォーム、テーブルを一つの塊にまとめる */}
       <Box sx={{ marginBottom: 2 }}>
         <h2>作成した問題一覧</h2>
-        {/* 検索フォーム */}
         <TextField
           label="検索"
           variant="outlined"
@@ -274,8 +248,12 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
                 </TableRow>
               ))}
               {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                <TableRow
+                  style={{
+                    height: 53 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={8} />
                 </TableRow>
               )}
             </TableBody>
@@ -287,7 +265,7 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
+          onPageChange={(_, page) => handleChangePage(page)}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>

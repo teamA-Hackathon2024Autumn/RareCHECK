@@ -8,15 +8,16 @@ import { Result } from "./Result";
 import { questions } from "./SampleQuestions";
 
 export const Exercise: React.FC = () => {
+ 
   type Result = {
     question: string;
     selectedOption: string;
     correctAnswer: string;
-    id: string;
+    id: number;
     isCorrect: boolean;
     category: string;
     difficulty: string;
-    step?: number;
+    step: string | number;
   };
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); //問題の配列を順番に取り出すためのステート
@@ -63,7 +64,8 @@ export const Exercise: React.FC = () => {
       step: questions[currentQuestionIndex].step,
     };
 
-    setAllResults((allResults) => [...allResults, newResult]);
+    const newAllResults = [...allResults, newResult];
+    setAllResults(newAllResults);
     setResult(newResult);
 
     // 結果をAPIに保存

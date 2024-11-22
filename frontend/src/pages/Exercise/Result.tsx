@@ -50,10 +50,10 @@ type Result = {
   question: string;
   selectedOption: string;
   correctAnswer: string;
-  id: string;
+  id: number;
   isCorrect: boolean;
   category: string;
-  step?: number;
+  step: number | string;
   difficulty: string;
 };
 
@@ -65,12 +65,8 @@ export const Result: React.FC<ResultSummaryProps> = ({ allResultsRows }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) => {
+  const handleChangePage = (newPage: number) => {
     setPage(newPage);
-    console.log(event);
   };
 
   const handleChangeRowsPerPage = (
@@ -139,7 +135,7 @@ export const Result: React.FC<ResultSummaryProps> = ({ allResultsRows }) => {
           count={allResultsRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
+          onPageChange={(_, page) => handleChangePage(page)}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>

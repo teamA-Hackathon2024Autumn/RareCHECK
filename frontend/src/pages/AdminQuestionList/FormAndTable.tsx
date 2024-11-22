@@ -13,11 +13,15 @@ import { visuallyHidden } from "@mui/utils";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 
+// 数値と文字列を扱える降順比較関数
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
-  if (b[orderBy] < a[orderBy]) {
+  if (typeof a[orderBy] === "string" && typeof b[orderBy] === "string") {
+    return a[orderBy].localeCompare(b[orderBy] as string);
+  }
+  if (a[orderBy] < b[orderBy]) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (a[orderBy] > b[orderBy]) {
     return 1;
   }
   return 0;
@@ -44,7 +48,7 @@ interface HeadCell {
 const headCells: readonly HeadCell[] = [
   {
     id: "id",
-    numeric: false,
+    numeric: true,
     disablePadding: true,
     label: "問題ID",
   },
@@ -52,7 +56,7 @@ const headCells: readonly HeadCell[] = [
     id: "question",
     numeric: false,
     disablePadding: false,
-    label: "問題",
+    label: "問題本文",
   },
   {
     id: "username",
@@ -62,7 +66,7 @@ const headCells: readonly HeadCell[] = [
   },
   {
     id: "step",
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: "ステップ",
   },
@@ -84,20 +88,16 @@ interface EnhancedTableProps {
   order: Order;
   orderBy: string;
   rowCount: number;
-  onRequestSort: (
-    property: keyof Data, // `event`引数は削除
-  ) => void;
+  onRequestSort: (property: keyof Data) => void;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { order, orderBy, onRequestSort } = props;
 
   const createSortHandler = (property: keyof Data) => () => {
-    // `event` 引数を削除
-    onRequestSort(property); // `event` を渡さずに直接 `property` だけを渡す
+    onRequestSort(property);
   };
 
-  // テーブルのヘッダーのコンポーネント
   return (
     <TableHead>
       <TableRow>
@@ -107,12 +107,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ paddingLeft: 2 }}
+            sx={{ paddingLeft: 2, whiteSpace: "nowrap" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)} // ここで `event` は不要
+              onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -130,39 +130,34 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 // 問題のオブジェクトの型定義
 export type Data = {
-  id: string;
+  id: number;
   question: string;
   username: string;
-  step: number;
+  step: number | string;
   category: string;
   btn?: string;
 };
 
 // propsの型定義
-type QuestionAwaitingCheckProps = {
+type AdminQuestionProps = {
   rows: Data[];
 };
 
 // 検索フォームと表の関数コンポーネント
-export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
-  rows,
-}) => {
+export const FormAndTable: React.FC<AdminQuestionProps> = ({ rows }) => {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  const handleRequestSort = (
-    property: keyof Data, // `event` 引数を削除
-  ) => {
+  const handleRequestSort = (property: keyof Data) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    console.log(event);
+  const handleChangePage = (newPage: number) => {
     setPage(newPage);
   };
 
@@ -185,7 +180,7 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
     return [...rows]
       .filter(
         (row) =>
-          row.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.id.toString().includes(searchQuery.toLowerCase()) ||
           row.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -226,7 +221,7 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
-              onRequestSort={handleRequestSort} // `event`は渡さない
+              onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
             <TableBody>
@@ -272,7 +267,7 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
+          onPageChange={(_, page) => handleChangePage(page)}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>

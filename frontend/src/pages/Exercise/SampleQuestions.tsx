@@ -1,5 +1,5 @@
 type Question = {
-  id: string;
+  id: number;
   question: string;
   options: string[];
   answer: string;
@@ -7,13 +7,13 @@ type Question = {
   questionimage: string;
   explanationimage: string;
   category: string;
-  step?: number;
+  step: number | string;
   difficulty: string;
 };
 
 export const questions: Question[] = [
   // {
-  //   "id": "1",
+  //   "id": 1,
   //   "question": "コンピュータのCPUの役割は何ですか？",
   //   "options": ["データの保存", "データの処理", "インターネット接続"],
   //   "answer": "データの処理",
@@ -25,7 +25,7 @@ export const questions: Question[] = [
   //   "difficulty": "易しい"
   // },
   // {
-  //   "id": "2",
+  //   "id": 2,
   //   "question": "インターネットで使われるIPアドレスとは何ですか？",
   //   "options": ["インターネットプロバイダの名前", "コンピュータの一意の識別番号", "ウェブサイトの名前"],
   //   "answer": "コンピュータの一意の識別番号",
@@ -37,7 +37,7 @@ export const questions: Question[] = [
   //   "difficulty": "易しい"
   // },
   // {
-  //   "id": "3",
+  //   "id": 3,
   //   "question": "HTMLとは何の略ですか？",
   //   "options": ["HyperText Markup Language", "Hyperlink Text Markup Language", "HomeText Markup Language"],
   //   "answer": "HyperText Markup Language",
@@ -49,7 +49,7 @@ export const questions: Question[] = [
   //   "difficulty": "易しい"
   // },
   // {
-  //   "id": "4",
+  //   "id": 4,
   //   "question": "WindowsとMac OSの違いは何ですか？",
   //   "options": ["OSのインターフェース", "OSの価格", "OSの開発元"],
   //   "answer": "OSの開発元",
@@ -61,7 +61,7 @@ export const questions: Question[] = [
   //   "difficulty": "易しい"
   // },
   // {
-  //   "id": "5",
+  //   "id": 5,
   //   "question": "プログラミング言語「Python」の特徴は何ですか？",
   //   "options": ["静的型付け", "簡潔で読みやすいコード", "コンパイルが必要"],
   //   "answer": "簡潔で読みやすいコード",
@@ -73,7 +73,7 @@ export const questions: Question[] = [
   //   "difficulty": "易しい"
   // },
   {
-    id: "6",
+    id: 6,
     question: "HTMLの「<h1>」タグは何のために使いますか？",
     options: ["リンクを作る", "見出しを作る", "画像を表示する"],
     answer: "見出しを作る",
@@ -85,7 +85,7 @@ export const questions: Question[] = [
     difficulty: "易しい",
   },
   {
-    id: "7",
+    id: 7,
     question: "Wi-Fiは何の略ですか？",
     options: ["Wireless Fidelity", "Web Fidelity", "Wide Frequency Interface"],
     answer: "Wireless Fidelity",
@@ -94,10 +94,11 @@ export const questions: Question[] = [
     questionimage: "",
     explanationimage: "",
     category: "ネットワーク",
+    step:"",
     difficulty: "普通",
   },
   {
-    id: "8",
+    id: 8,
     question: "Linuxはどのような種類のソフトウェアですか？",
     options: [
       "オペレーティングシステム",
@@ -114,7 +115,7 @@ export const questions: Question[] = [
     difficulty: "易しい",
   },
   {
-    id: "9",
+    id: 9,
     question: "「URL」とは何の略ですか？",
     options: [
       "Uniform Resource Locator",
@@ -131,7 +132,7 @@ export const questions: Question[] = [
     difficulty: "易しい",
   },
   {
-    id: "10",
+    id: 10,
     question: "データベース管理システム（DBMS）とは何ですか？",
     options: [
       "データの保存と管理を行うソフトウェア",
@@ -144,10 +145,11 @@ export const questions: Question[] = [
     questionimage: "",
     explanationimage: "",
     category: "データベース",
+    step: "",
     difficulty: "易しい",
   },
   {
-    id: "11",
+    id: 11,
     question: "インターネットの「HTTP」とは何の略ですか？",
     options: [
       "HyperText Transfer Protocol",
@@ -164,7 +166,7 @@ export const questions: Question[] = [
     difficulty: "易しい",
   },
   {
-    id: "12",
+    id: 12,
     question: "バイナリコードとは何ですか？",
     options: ["0と1の組み合わせ", "文字コード", "画像ファイルの圧縮形式"],
     answer: "0と1の組み合わせ",
@@ -173,11 +175,11 @@ export const questions: Question[] = [
     questionimage: "",
     explanationimage: "",
     category: "プログラミング",
-    step: 58,
+    step: "",
     difficulty: "易しい",
   },
   {
-    id: "13",
+    id: 13,
     question: "「クラウドコンピューティング」とは何ですか？",
     options: [
       "ローカルでデータを保存すること",
@@ -190,10 +192,11 @@ export const questions: Question[] = [
     questionimage: "",
     explanationimage: "",
     category: "ネットワーク",
+    step:"",
     difficulty: "易しい",
   },
   {
-    id: "14",
+    id: 14,
     question: "「RAM」とは何の略ですか？",
     options: [
       "Read Access Memory",
@@ -210,7 +213,7 @@ export const questions: Question[] = [
     difficulty: "易しい",
   },
   {
-    id: "15",
+    id: 15,
     question: "サーバーとはどんな役割を果たしますか？",
     options: [
       "データを保存して提供する",
