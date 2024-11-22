@@ -12,7 +12,7 @@ import { questionRows } from "./SampleQuestions";
 //   username: string;
 // };
 
-export const AdminQuestionEdit: React.FC = () => {
+export const AdminQuestionList: React.FC = () => {
   // SampleQuestions.tsxから問題をimportしているが、
   // 本番はuseEffectでAPIからデータを取得する！
 

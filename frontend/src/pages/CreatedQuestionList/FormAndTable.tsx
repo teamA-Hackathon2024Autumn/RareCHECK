@@ -25,10 +25,10 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
 
 type Order = "asc" | "desc";
 
-function getComparator<Key extends keyof Data>(
+function getComparator<Key extends keyof CreatedQuestionData>(
   order: Order,
   orderBy: Key,
-): (a: Data, b: Data) => number {
+): (a: CreatedQuestionData, b: CreatedQuestionData) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -36,10 +36,27 @@ function getComparator<Key extends keyof Data>(
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof CreatedQuestionData;
   label: string;
   numeric: boolean;
 }
+
+// 問題のオブジェクトの型定義
+export type CreatedQuestionData = {
+  id: string;
+  question: string;
+  step: number | string;
+  category: string;
+  date: Date;
+  hasComment: boolean;
+  isAccepted: boolean;
+  btn?: string;
+};
+
+// propsの型定義
+type CreatedQuestionProps = {
+  rows: CreatedQuestionData[];
+};
 
 const headCells: readonly HeadCell[] = [
   {
@@ -55,14 +72,8 @@ const headCells: readonly HeadCell[] = [
     label: "問題",
   },
   {
-    id: "username",
-    numeric: false,
-    disablePadding: false,
-    label: "作成者",
-  },
-  {
     id: "step",
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: "ステップ",
   },
@@ -71,6 +82,24 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: "カテゴリ",
+  },
+  {
+    id: "date",
+    numeric: false,
+    disablePadding: false,
+    label: "作成年月日",
+  },
+  {
+    id: "hasComment",
+    numeric: false,
+    disablePadding: false,
+    label: "コメント",
+  },
+  {
+    id: "isAccepted",
+    numeric: false,
+    disablePadding: false,
+    label: "承認状況",
   },
   {
     id: "btn",
@@ -84,17 +113,14 @@ interface EnhancedTableProps {
   order: Order;
   orderBy: string;
   rowCount: number;
-  onRequestSort: (
-    property: keyof Data, // `event`引数は削除
-  ) => void;
+  onRequestSort: (property: keyof CreatedQuestionData) => void;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { order, orderBy, onRequestSort } = props;
 
-  const createSortHandler = (property: keyof Data) => () => {
-    // `event` 引数を削除
-    onRequestSort(property); // `event` を渡さずに直接 `property` だけを渡す
+  const createSortHandler = (property: keyof CreatedQuestionData) => () => {
+    onRequestSort(property);
   };
 
   // テーブルのヘッダーのコンポーネント
@@ -128,32 +154,15 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-// 問題のオブジェクトの型定義
-export type Data = {
-  id: string;
-  question: string;
-  username: string;
-  step: number;
-  category: string;
-  btn?: string;
-};
-
-// propsの型定義
-type QuestionAwaitingCheckProps = {
-  rows: Data[];
-};
-
 // 検索フォームと表の関数コンポーネント
-export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
-  rows,
-}) => {
+export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
+  const [orderBy, setOrderBy] = React.useState<keyof CreatedQuestionData>("id");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  const handleRequestSort = (property: keyof Data) => {
+  const handleRequestSort = (property: keyof CreatedQuestionData) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -185,15 +194,17 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
         (row) =>
           row.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.step.toString().includes(searchQuery.toLowerCase()) ||
           row.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.step.toString().includes(searchQuery.toLowerCase()),
+          row.date.toString().includes(searchQuery.toLowerCase()) ||
+          row.hasComment.toString().includes(searchQuery.toLowerCase()) ||
+          row.isAccepted.toString().includes(searchQuery.toLowerCase()),
       )
       .sort(getComparator(order, orderBy))
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   }, [order, orderBy, page, rowsPerPage, searchQuery]);
 
-  const handleButtonClick = (row: Data) => {
+  const handleButtonClick = (row: CreatedQuestionData) => {
     alert(`確認ボタンが押されました: 問題ID ${row.id}`);
   };
 
@@ -224,7 +235,7 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
-              onRequestSort={handleRequestSort} // `event`は渡さない
+              onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
             <TableBody>
@@ -237,13 +248,19 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
                     {row.question}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
-                    {row.username}
-                  </TableCell>
-                  <TableCell sx={{ border: "1px solid #ddd" }}>
                     {row.step}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
                     {row.category}
+                  </TableCell>
+                  <TableCell sx={{ border: "1px solid #ddd" }}>
+                    {row.date.toLocaleDateString("ja-JP")}
+                  </TableCell>
+                  <TableCell sx={{ border: "1px solid #ddd" }}>
+                    {row.hasComment ? "あり" : "なし"}
+                  </TableCell>
+                  <TableCell sx={{ border: "1px solid #ddd" }}>
+                    {row.isAccepted ? "承認済み" : "未承認"}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
                     <Button
