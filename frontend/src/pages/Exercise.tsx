@@ -101,7 +101,7 @@ export const Exercise: React.FC = () => {
     // 結果をAPIに保存
     const postResult = async () => {
       try {
-        await axios.post("http://localhost:5000/submit", { newResult });
+        await axios.post("http://localhost:5000/submit", { result });
         console.log("post completed!");
       } catch (error) {
         console.error("Error saving result:", error);
