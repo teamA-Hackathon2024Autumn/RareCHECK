@@ -30,6 +30,26 @@ def admin_get_questions():
     
     return jsonify(question)
 
+# 問題一覧表示(未承認の問題一覧)
+@app.route('/rarecheck/admin/notaccept/questions', methods=['GET'])
+def get_not_accept_question():
+    questions = Question.query.filter(
+        Question.is_accept == False, 
+        Question.has_comment == False
+    ).all()
+    question = []
+
+    for q in questions:
+        question.append({
+            "id": q.id,
+            "username": q.user.username,
+            "question": q.question,
+            "step": q.step,
+            "category_name": q.category.category_name
+        })
+    
+    return jsonify(question)
+
 # 問題詳細表示　(承認とコメントと削除ができる)
 @app.route('/rarecheck/admin/question/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def admin_get_question(id):
@@ -84,32 +104,8 @@ def admin_get_question(id):
 
 
 
-
-
-# 問題一覧表示(未承認の問題)
-@app.route('/rarecheck/admin/notaccept/questions', methods=['GET'])
-def get_not_accept_question():
-    questions = Question.query.filter(
-        Question.is_accept == False, 
-        Question.has_comment == False
-    ).all()
-    question = []
-
-    for q in questions:
-        question.append({
-            "id": q.id,
-            "username": q.user.username,
-            "question": q.question,
-            "step": q.step,
-            "category_name": q.category.category_name
-        })
-    
-    return jsonify(question)
-
-# 問題詳細表示(コメントと承認ができる。GETとUPDATE)
-
-
-# 問題一覧表示(ユーザー)
+# 一般ユーザー(受講生)
+# 問題一覧表示
 @app.route('/rarecheck/questions', methods=['GET'])
 def get_questions():
     questions = Question.query.all()
