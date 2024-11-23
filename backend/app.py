@@ -67,6 +67,48 @@ def create_question():
         traceback.print_exc()
         return jsonify({"error": "An unexpected error occurred."}), 500
     
+# 問題編集
+@app.route('/rarecheck/questions/<int:id>/edit', methods=['GET','PUT'])
+def get_question(id):
+    question = Question.query.filter_by(id=id).first()
+
+    if not question:
+        return jsonify({'error': 'question not found'}), 404
+    
+    if request.method == 'GET':
+        return jsonify({
+            'id': question.id,
+            'step': question.step,
+            'category_id': question.category_id,
+            'question': question.question,
+            # 'quesiton_image': question.question_image, S3に保存する
+            'correct_option': question.correct_option,
+            'wrong_option_1': question.wrong_option_1,
+            'wrong_option_2': question.wrong_option_2,
+            'explanation': question.explanation,
+            # 'explanation_image': question.explanation_image, S3に保存する
+            'comment': question.comment
+        })
+    
+    elif request.method == 'PUT':
+        data = request.get_json()
+
+        question.step = data.get('step', question.step)
+        question.category_id = data.get('category_id', question.category_id)
+        question.question = data.get('question', question.question)
+        # question.question_image = data.get('question_image', question.quesion_image) S3に保存する
+        question.correct_option = data.get('correct_option', question.correct_option)
+        question.wrong_option_1 = data.get('wrong_option_1', question.wrong_option_1)
+        question.wrong_option_2 = data.get('wrong_opiton_2', question.wrong_option_2)
+        question.explanation = data.get('explanation', question.explanation)
+        # question.explanation_image = data.get('explanation_image', question.explanation_image) S3に保存する
+
+        db.session.commit()
+
+
+        return jsonify({'message': 'Question updated Succesfully'}), 200
+
+    
 @app.errorhandler(Exception)
 def handle_exception(e):
     # 詳細なエラーをレスポンスとして返す
