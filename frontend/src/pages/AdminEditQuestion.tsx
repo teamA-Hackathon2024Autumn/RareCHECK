@@ -16,8 +16,6 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
-/* （コメント）mui/icons-materialを使うとエラーが出るので退避、package.jsonにも含めてみたが失敗*/
-/* import { CollectionsFilled } from '@mui/icons-material'; */
 
 export const AdminEditQuestion: React.FC = () => {
   /*stateの初期値にするquizのデフォルト（axiosで取得できるようになったら不要）*/
@@ -33,7 +31,7 @@ export const AdminEditQuestion: React.FC = () => {
     explanation:
       "mkdirはディレクトリを作成する時に使うコマンドです。unameは自身の端末のosを確認するコマンドです。touchはファイルを作成するコマンドです",
     explanationImage: "",
-    defficulty: "",
+    difficulty: "",
     comment: "",
     isAccepted: false,
   };
@@ -49,11 +47,11 @@ export const AdminEditQuestion: React.FC = () => {
   //   }
   //   getQuiz();
   // },[]);
-  const defficulties: string[] = ["易しい", "普通", "難しい"];
+  const difficulties: string[] = ["易しい", "普通", "難しい"];
 
-  const changeDefficulty = (e: any) => {
-    const newDefficulty = { ...quiz, defficulty: e.target.value };
-    setQuiz(newDefficulty);
+  const changeDifficulty = (e: any) => {
+    const newDifficulty = { ...quiz, difficulty: e.target.value };
+    setQuiz(newDifficulty);
   };
 
   const changeComment = (e: any) => {
@@ -78,7 +76,7 @@ export const AdminEditQuestion: React.FC = () => {
         </div>
         <div className="questionStatus">
           <>問題ID: {quiz.id}</>
-          <p>難易度:{quiz.defficulty ? quiz.defficulty : "未設定"}</p>
+          <p>難易度:{quiz.difficulty ? quiz.difficulty : "未設定"}</p>
           <p>問題掲載: {quiz.isAccepted ? "承認" : "未承認"}</p>
         </div>
         <form>
@@ -206,21 +204,21 @@ export const AdminEditQuestion: React.FC = () => {
                   onChange={changeComment}
                 />
                 <div className={styles.selectformLayout}>
-                  <FormControl className={styles.selectDefficulty}>
+                  <FormControl className={styles.selectDifficulty}>
                     <InputLabel id="defiiculty-select-label">
                       難易度（１つ選択）
                     </InputLabel>
                     <Select
                       labelId="step-select-label"
                       id="step-select"
-                      value={quiz.defficulty}
-                      label="defficulty"
-                      onChange={changeDefficulty}
+                      value={quiz.difficulty}
+                      label="difficulty"
+                      onChange={changeDifficulty}
                     >
-                      {defficulties.map((_defficulty) => {
+                      {difficulties.map((_difficulty) => {
                         return (
-                          <MenuItem key={_defficulty} value={_defficulty}>
-                            {_defficulty}
+                          <MenuItem key={_difficulty} value={_difficulty}>
+                            {_difficulty}
                           </MenuItem>
                         );
                       })}

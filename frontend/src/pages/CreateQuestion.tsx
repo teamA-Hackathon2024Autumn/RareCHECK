@@ -12,10 +12,23 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
-// import { CollectionsFilled } from '@mui/icons-material';
+import CollectionsIcon from "@mui/icons-material/Collections";
 
 export const CreateQuestion: React.FC = () => {
   /*stetの初期値にするquizのデフォルト*/
+
+  type Select = {
+    step: string | number;
+    category: string;
+    question: string;
+    questionImage: string;
+    correctAnswer: string;
+    wrongAnswer1: string;
+    wrongAnswer2: string;
+    explanation: string;
+    explanationImage: string;
+  };
+
   const defaultQuiz = {
     step: "",
     category: "",
@@ -42,11 +55,13 @@ export const CreateQuestion: React.FC = () => {
     "その他",
   ];
 
-  const [quiz, setQuiz] = useState(defaultQuiz);
+  const [quiz, setQuiz] = useState<Select>(defaultQuiz);
 
   const selectStep = (e: any) => {
     const newStep = { ...quiz, step: e.target.value };
     setQuiz(newStep);
+    console.log(quiz);
+    console.log(newStep);
   };
 
   const selectCategory = (e: any) => {
@@ -61,11 +76,11 @@ export const CreateQuestion: React.FC = () => {
         <form>
           <div className={styles.formscolumn}>
             <Stack spacing={2}>
-              {/*ステップ選択：０または１つ選択 */}
+              {/*ステップ選択：１つ選択 */}
               <div className={styles.selectformLayout}>
                 <FormControl fullWidth>
                   <InputLabel id="step-select-label">
-                    ステップ（０または１つ選択）
+                    ステップ（１つ選択）
                   </InputLabel>
                   <Select
                     labelId="step-select-label"
@@ -73,7 +88,7 @@ export const CreateQuestion: React.FC = () => {
                     value={quiz.step}
                     label="Step"
                     defaultValue=""
-                    onChange={selectStep}
+                    onClick={selectStep}
                   >
                     {steps.map((step) => {
                       return (
@@ -120,7 +135,8 @@ export const CreateQuestion: React.FC = () => {
                 {/* 問題用画像のアップロード */}
                 <div>
                   <Button variant="contained" size="small" color="inherit">
-                    問題用画像をアップロード{/*<CollectionsFilled/>*/}
+                    問題用画像をアップロード
+                    <CollectionsIcon />
                   </Button>
                 </div>
               </div>
@@ -144,7 +160,8 @@ export const CreateQuestion: React.FC = () => {
                 {/* 解説用画像のアップロード */}
                 <div>
                   <Button variant="contained" size="small" color="inherit">
-                    解説用画像をアップロード{/*<CollectionsFilled/>*/}
+                    解説用画像をアップロード
+                    <CollectionsIcon />
                   </Button>
                 </div>
               </div>

@@ -1,0 +1,42 @@
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+}
+
+.container {
+  background-color: #ffff;
+  border-radius: 0.5rem;
+  flex-direction: column;
+  padding: 1.5rem;
+  width: 80%;
+  align-self: center;
+}
+.maruBatsuStyle {
+  color: red;
+  font-weight: bold;
+}
+
+.corectAndWrongLayout {
+  border: solid, 0.5px;
+  width: 100px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.correctAndWrongLayoutContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.questionBox {
+  border: solid, 0.5px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}

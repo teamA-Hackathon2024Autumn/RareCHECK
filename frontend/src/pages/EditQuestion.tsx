@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from "@mui/material";
 /* （コメント）mui/icons-materialを使うとエラーが出るので退避、package.jsonにも含めてみたが失敗*/
-/* import { CollectionsFilled } from '@mui/icons-material'; */
+import CollectionsIcon from "@mui/icons-material/Collections";
 
 export const EditQuestion: React.FC = () => {
   /*stateの初期値にするquizのデフォルト（axiosで取得できるようになったら不要）*/
@@ -178,7 +178,8 @@ export const EditQuestion: React.FC = () => {
                     {/* 問題用画像のアップロード （未実装）*/}
                     <div>
                       <Button variant="contained" size="small" color="inherit">
-                        問題用画像を更新{/*<CollectionsFilled/>*/}
+                        問題用画像を更新
+                        <CollectionsIcon />
                       </Button>
                     </div>
                   </div>
@@ -216,7 +217,8 @@ export const EditQuestion: React.FC = () => {
                     {/* 解説用画像のアップロード（未実装） */}
                     <div>
                       <Button variant="contained" size="small" color="inherit">
-                        解説用画像を更新{/*<CollectionsFilled/>*/}
+                        解説用画像を更新
+                        <CollectionsIcon />
                       </Button>
                     </div>
                   </div>
