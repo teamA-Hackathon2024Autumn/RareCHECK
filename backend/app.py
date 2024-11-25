@@ -130,6 +130,11 @@ def create_question():
     try:
         data = request.get_json()
 
+        # フロントからはcategory_nameが送られてくるが、バックではcategory_idとして保存
+        category = Category.query.filter_by(category_name=data.get('category_name')).first()
+        if not category:
+            return jsonify({'error': 'Invalid category_name'}), 400
+
         new_question = Question(
             step=data.get('step'),
             question=data.get('question'),
@@ -144,7 +149,7 @@ def create_question():
             comment=data.get('comment'),
             has_comment=data.get('has_comment'),
             user_id=data.get('user_id'),
-            category_id=data.get('category_id')
+            category_id=category.id
         )
 
         db.session.add(new_question)
@@ -169,10 +174,14 @@ def get_question(id):
         return jsonify({'error': 'question not found'}), 404
     
     if request.method == 'GET':
+
+        category = Category.query.get(question.category.id)
+        category_name = category.category_name if category else None
+
         return jsonify({
             'id': question.id,
             'step': question.step,
-            'category_id': question.category_id,
+            'category_name': category_name,
             'question': question.question,
             # 'quesiton_image': question.question_image, S3に保存する
             'correct_option': question.correct_option,
@@ -187,8 +196,14 @@ def get_question(id):
         # フロントから送られてきたデータを取得
         data = request.get_json()
 
+        # フロントから送られてきたcategory_nameをcategory_idにして保存
+        if 'category_name' in data:
+            category = Category.query.filter_by(category_name=data.get('category_name')).first()
+            if not category:
+                return jsonify({'error': 'Invalid category_name'}), 400
+            question.category_id = category.id
+
         question.step = data.get('step', question.step)
-        question.category_id = data.get('category_id', question.category_id)
         question.question = data.get('question', question.question)
         # question.question_image = data.get('question_image', question.quesion_image) S3に保存する
         question.correct_option = data.get('correct_option', question.correct_option)
