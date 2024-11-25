@@ -65,10 +65,25 @@ CREATE TABLE learning_records (
     FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
+-- usersのサンプルデータ
 INSERT INTO users (username, email, password, is_admin) VALUES ('testuser', 'test@email.com', 'testtest', TRUE);
+
+-- categoriesのサンプルデータ
 INSERT INTO categories (category_name) VALUES ('インフラ'),('プログラミング'),('ウェブシステム'),('アーキテクティング'),('セキュリティ'),('AI/データサイエンス'),('UI/UX'),('ビジネススキル'),('その他');
-INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, difficulty, comment, user_id, category_id) VALUES (1, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', 1, "goodです", 1, 1);
-INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, difficulty, user_id, category_id) VALUES (2, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', 1, 1, 1);
+
+-- questionsのサンプルデータ
+-- コメントありデータ is_acceptがTrue
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, comment, has_comment, user_id, category_id) VALUES (1, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 1, "goodです", TRUE, 1, 1);
+-- コメントありデータ is_acceptがFalse
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, comment, has_comment, user_id, category_id) VALUES (2, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', FALSE, 1, "niceです", TRUE, 1, 1);
+-- コメントなしデータ is_acceptがTrue
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (3, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 1, 1, 1);
+-- コメントなしデータ is_acceptがFalse
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (4, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', FALSE, 1, 1, 1);
+
+
+
+
 
 -- 疎通確認用
 -- CREATE TABLE IF NOT EXISTS item (

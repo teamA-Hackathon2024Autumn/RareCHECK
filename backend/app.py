@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from models import db, Question
+from models import db, Question, User, Category
 import traceback
 
 
@@ -12,6 +12,99 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # sqlalchemyの初期化
 db.init_app(app)
 
+# 管理者(admin)
+# 問題一覧表示(承認・未承認含む全ての問題)
+@app.route('/rarecheck/admin/questions', methods=['GET'])
+def admin_get_questions():
+    questions = Question.query.all()
+    question = []
+
+    for q in questions:
+        question.append({
+            "id": q.id,
+            "username": q.user.username,
+            "question": q.question,
+            "step": q.step,
+            "category_name": q.category.category_name
+        })
+    
+    return jsonify(question)
+
+# 問題一覧表示(未承認の問題一覧)
+@app.route('/rarecheck/admin/notaccept/questions', methods=['GET'])
+def get_not_accept_question():
+    questions = Question.query.filter(
+        Question.is_accept == False, 
+        Question.has_comment == False
+    ).all()
+    question = []
+
+    for q in questions:
+        question.append({
+            "id": q.id,
+            "username": q.user.username,
+            "question": q.question,
+            "step": q.step,
+            "category_name": q.category.category_name
+        })
+    
+    return jsonify(question)
+
+# 問題詳細表示　(承認とコメントと削除ができる)
+@app.route('/rarecheck/admin/question/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def admin_get_question(id):
+    question = Question.query.get(id)
+
+    if request.method == 'GET':
+        if not question:
+            return jsonify({'error': 'question not found'}), 404
+        
+        return jsonify({
+            'id': question.id,
+            'step': question.step,
+            'category_name': question.category.category_name,
+            'question': question.question,
+            # 'question_image': question.question_image, S3に保存する
+            'correct_option': question.correct_option,
+            'wrong_option_1': question.wrong_option_1,
+            'wrong_option_2': question.wrong_option_2,
+            'explanation': question.explanation,
+            # 'explanation_image': question.explanation_image, S3に保存する
+            'comment': question.comment,
+        })
+    
+    elif request.method == 'PUT':
+        # フロントから送られてきたデータを取得
+        data = request.get_json()
+
+        question.comment = data.get('comment', question.comment)
+        if question.comment != None:
+            question.has_comment = True
+        question.is_accept = data.get('is_accept', question.is_accept)
+
+        db.session.commit()
+
+        return jsonify({'message': 'Question updated Successfully'}), 200
+
+
+    
+    elif request.method == 'DELETE':
+        question = Question.query.filter_by(id=id).first()
+
+        if not question:
+            return jsonify({'error': 'question not found'}), 404
+        
+        try: 
+            db.session.delete(question)
+            db.session.commit()
+            return jsonify({'question deleted successfully'}), 200
+        except:
+            db.session.rollback()
+            return jsonify({'error': 'failed to delete question'})
+
+
+
+# 一般ユーザー(受講生)
 # 問題一覧表示
 @app.route('/rarecheck/questions', methods=['GET'])
 def get_questions():
@@ -91,6 +184,7 @@ def get_question(id):
         })
     
     elif request.method == 'PUT':
+        # フロントから送られてきたデータを取得
         data = request.get_json()
 
         question.step = data.get('step', question.step)
@@ -106,7 +200,7 @@ def get_question(id):
         db.session.commit()
 
 
-        return jsonify({'message': 'Question updated Succesfully'}), 200
+        return jsonify({'message': 'Question updated Successfully'}), 200
 
     
 @app.errorhandler(Exception)
