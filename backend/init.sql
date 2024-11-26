@@ -81,9 +81,13 @@ INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_opt
 -- コメントなしデータ is_acceptがFalse
 INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (4, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', FALSE, 1, 1, 1);
 
-
-
-
+-- 問題絞り込みようquestionsのテストデータ
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (1, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 1, 1, 1);
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (10, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 2, 1, 1);
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (50, 'IPアドレスv4は何bitでしょうか', '32', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 3, 1, 1);
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (100, 'MACアドレスは何bitでしょうか', '48', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 1, 1, 1);
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (150, 'MACアドレスは何bitでしょうか', '48', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 2, 1, 1);
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (300, 'MACアドレス何bitでしょうか', '48', '64', '1024', 'IPアドレスv4は32bitです', TRUE, 3, 1, 1);
 
 -- 疎通確認用
 -- CREATE TABLE IF NOT EXISTS item (
