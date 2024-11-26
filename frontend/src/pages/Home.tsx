@@ -1,8 +1,29 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Page } from "../components/layout/Page";
 import { QuestionButton } from "../components/common/QuestionButton";
 import styles from "./Home.module.css";
 
 export const Home = () => {
+  const [userName, setUserName] = useState<string | null>("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // ローカルストレージからユーザー名を取得
+    const storedUserName = localStorage.getItem("rarecheck-username");
+    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+
+    if (storedUserName != "") {
+      setUserName(storedUserName);
+      if (storedUserIsAdmin === "true") {
+        navigate("/admin-home");
+      }
+    }
+    if (storedUserName === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   return (
     <Page login={true}>
       <div className={styles.dashboadLayout}>
@@ -13,7 +34,7 @@ export const Home = () => {
             gridRow: "1 / 2",
           }}
         >
-          <h3 className={styles.userName}>ユーザー名: RareCHECK@00期</h3>
+          <h3 className={styles.userName}>ユーザー名: {userName}</h3>
         </div>
         <div
           className={styles.dashboardItem}
