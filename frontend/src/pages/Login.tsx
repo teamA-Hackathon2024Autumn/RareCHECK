@@ -102,7 +102,11 @@ export const Login = () => {
                 >
                   ログイン
                 </Button>
-                <Button variant="outlined" className={styles.button}>
+                <Button
+                  variant="outlined"
+                  className={styles.button}
+                  onClick={() => navigate("/signup")}
+                >
                   新規登録はこちら
                 </Button>
               </Stack>

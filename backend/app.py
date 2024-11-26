@@ -69,10 +69,8 @@ def login():
 def logout():
     try:
         data = request.get_json()
-        session_id = data.get('sessionId')
 
         # セッションが存在する場合
-        # if session_id in session:
         if 'session_id' in session:
             # セッションをクリア
             session.clear()
@@ -84,6 +82,55 @@ def logout():
         # エラーハンドリング
         traceback.print_exc()
         return jsonify({'message': 'An error occurred during logout', 'error': str(e)}), 500
+
+
+# 新規登録
+@app.route('/rarecheck/users/register', methods=['POST'])
+def register():
+    try:
+        # クライアントからのリクエストデータを取得
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+
+        # 入力データのバリデーション
+        if not username or not email or not password:
+            return jsonify({'message': 'Username, email, and password are required'}), 400
+
+        # ユーザー名またはメールアドレスの重複チェック
+        if User.query.filter_by(username=username).first():
+            return jsonify({'message': 'ユーザー名がすでに利用されています'}), 400
+        if User.query.filter_by(email=email).first():
+            return jsonify({'message': 'メールアドレスがすでに利用されています'}), 400
+
+        # 新しいユーザーをデータベースに追加
+        new_user = User(
+            username=username,
+            email=email,
+            password=password,  #TODO: パスワードのハッシュ化
+            is_admin=False  # 新規登録時はデフォルトで管理者ではない
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        # セッションIDを生成
+        session_id = str(uuid.uuid4())
+        session['session_id'] = session_id
+        session['user_id'] = new_user.id
+
+        # 登録完了後のレスポンスデータ
+        response_data = {
+            'userId': new_user.id,
+            'username': new_user.username,
+            'isAdmin': new_user.is_admin,
+        }
+        return jsonify(response_data), 201  # ユーザー登録成功時は201を返す
+
+    except Exception as e:
+        db.session.rollback()  # エラー時にトランザクションをロールバック
+        traceback.print_exc()
+        return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
 
 
 # 管理者(admin)
