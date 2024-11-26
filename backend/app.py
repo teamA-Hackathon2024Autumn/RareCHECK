@@ -1,18 +1,93 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from models import db, Question, User, Category, LearningRecord
 from sqlalchemy import and_, or_
+from flask_session import Session
+from models import db, Question, User, Category
+import uuid
 import traceback
 import random
 
 
 app = Flask(__name__)
-CORS(app)  # CORSを有効にする
+# CORS(app)  # CORSを有効にする
+# CORS が有効だとリクエストが通らない（front→localhost:3000, backend→localhost:5000）
+CORS(app, supports_credentials=True) 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://user:password@db/rarecheck'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# セッション用のシークレットキー、環境変数ファイルに移す
+app.config['SECRET_KEY'] = 'rarecheck_secret_key'  
+app.config['SESSION_TYPE'] = 'filesystem'  # セッションをファイルに保存
+app.config['SESSION_COOKIE_HTTPONLY'] = True # HttpOnly を有効化
+
 # sqlalchemyの初期化
 db.init_app(app)
+
+Session(app)
+
+# ログイン
+@app.route('/rarecheck/users/login', methods=['POST'])
+def login():
+    try:
+        # クライアントからのリクエストデータを取得
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        # 入力データのバリデーション
+        if not email or not password:
+            return jsonify({'message': 'Email and password are required'}), 400
+        
+        # ユーザーをデータベースから検索
+        user = User.query.filter_by(email=email, password=password).first()
+        if user is None:
+            print(f"Debug: No user found with email={email} and password={password}")
+            return jsonify({'message': 'email, password not found'}), 400
+        
+        if user:
+            # セッションIDを生成
+            session_id = str(uuid.uuid4())
+            session['session_id'] = session_id
+            session['user_id'] = user.id
+
+            # レスポンスデータを作成
+            response_data = {
+                'userId': user.id,
+                'username': user.username,
+                'isAdmin': user.is_admin,
+            }
+            return jsonify(response_data), 200
+        else:
+            return jsonify({'message': 'Invalid username or password'}), 400
+
+    except Exception as e:
+          # エラーハンドリング
+        traceback.print_exc()
+        return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
+
+
+# ログアウト
+@app.route('/rarecheck/users/logout', methods=['POST'])
+def logout():
+    try:
+        data = request.get_json()
+        session_id = data.get('sessionId')
+
+        # セッションが存在する場合
+        # if session_id in session:
+        if 'session_id' in session:
+            # セッションをクリア
+            session.clear()
+            return jsonify({'message': 'Logout successful'}), 200
+        else:
+            # セッションが存在しない場合
+            return jsonify({'message': 'No active session found'}), 400
+    except Exception as e:
+        # エラーハンドリング
+        traceback.print_exc()
+        return jsonify({'message': 'An error occurred during logout', 'error': str(e)}), 500
+
 
 # 管理者(admin)
 # 問題一覧表示(承認・未承認含む全ての問題)
