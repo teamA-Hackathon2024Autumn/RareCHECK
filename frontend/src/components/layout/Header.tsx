@@ -1,8 +1,8 @@
-import styles from "./Header.module.css";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../common/Logo";
 import { Button } from "@mui/material";
 import { logout } from "../../services/auth";
+import styles from "./Header.module.css";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -31,14 +31,13 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.headerLayout}>
-        <div
-          className={styles.headerLogo}
-          onClick={() => alert("クリックされました")}
-        >
+        <div className={styles.headerLogo} onClick={() => navigate("/")}>
           <Logo />
         </div>
         <div className={styles.headerButtonLayout}>
-          <Button variant="contained">マイページ</Button>
+          <Button variant="contained" onClick={() => navigate("/userinfo")}>
+            マイページ
+          </Button>
           <Button variant="outlined" onClick={handleLogout}>
             ログアウト
           </Button>

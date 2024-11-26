@@ -11,10 +11,20 @@ export const UserInfo = () => {
             <h2 className={styles.title}>ユーザー情報の確認・変更</h2>
             <Stack spacing={2}>
               <TextField label="User name" variant="outlined" />
+
               <TextField label="Email address" variant="outlined" />
-              <TextField label="Password" type="password" variant="outlined" />
               <TextField
-                label="Re-type password"
+                label="Password(現在のパスワード)"
+                type="password"
+                variant="outlined"
+              />
+              <TextField
+                label="New password"
+                type="password"
+                variant="outlined"
+              />
+              <TextField
+                label="Re-type new password"
                 type="password"
                 variant="outlined"
               />
