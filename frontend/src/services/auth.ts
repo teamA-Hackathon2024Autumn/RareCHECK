@@ -89,7 +89,6 @@ export const signup = async (data: SingupFormValues) => {
           status: error.response?.status,
           message: "APIが見つかりません",
         };
-
       console.error("その他のエラー:", error.response?.status, error.message);
     } else {
       console.error("予期しないエラー:", error);

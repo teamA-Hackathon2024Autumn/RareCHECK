@@ -36,21 +36,14 @@ export const Home = () => {
       const userId = localStorage.getItem("rarecheck-userId");
       if (userId) {
         const result = await fetchExerciseAnalysisData(userId);
-        console.log(result);
-        setExerciseAnalysisData(result);
 
-        // 実際のリクエストの処理
-        // if ("data" in result) {
-        //   console.log("OK");
-        //   // if (result.status == 200) {
-        //   //   console.log("OK");
-        //   // }
-        // } else {
-        //   console.log("Error");
-        //   // エラー時のメッセージを表示
-        //   // console.error(result.message);
-        //   // setErrorMessage(result.message);
-        // }
+        if (result && "data" in result) {
+          if (result.status == 200) {
+            setExerciseAnalysisData(result.data);
+          }
+        } else {
+          setExerciseAnalysisData(null);
+        }
       }
     };
 
@@ -76,7 +69,7 @@ export const Home = () => {
             gridRow: "1 / 7",
           }}
         >
-          ランキング関係
+          ランキング
         </div>
         <div
           className={styles.dashboardItem}

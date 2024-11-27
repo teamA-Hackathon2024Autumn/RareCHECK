@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { api } from "./auth";
 
 export const ApiTest = async () => {
   const response = await axios.get("/api/items");
@@ -8,26 +9,28 @@ export const ApiTest = async () => {
 export const fetchExerciseAnalysisData = async (userId: string) => {
   console.log(userId);
 
-  return {
-    first_2week: {
-      total_questions: 100,
-      total_correct: 50,
-      correct_percentage: 50,
-    },
-    second_2week: {
-      total_questions: 10,
-      total_correct: 10,
-      correct_percentage: 100,
-    },
-    third_2week: {
-      total_questions: 100,
-      total_correct: 75,
-      correct_percentage: 75,
-    },
-    fourth_2week: {
-      total_questions: 150,
-      total_correct: 15,
-      correct_percentage: 10,
-    },
-  };
+  const url = `/rarecheck/users/${userId}/exercise_analysis`;
+
+  try {
+    const response: AxiosResponse = await api.get(url);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 400) {
+        console.log(error.response.data);
+        return {
+          status: error.response?.status,
+          message: error.response.data.message,
+        };
+      }
+      if (error.response?.status === 404)
+        return {
+          status: error.response?.status,
+          message: "APIが見つかりません",
+        };
+      console.error("その他のエラー:", error.response?.status, error.message);
+    } else {
+      console.error("予期しないエラー:", error);
+    }
+  }
 };

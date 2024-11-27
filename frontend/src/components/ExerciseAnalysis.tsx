@@ -1,19 +1,19 @@
 import { BarChart } from "@mui/x-charts/BarChart";
 import { Typography } from "@mui/material";
 import styles from "./ExerciseAnalysis.module.css";
-import { getTwoWeekPeriods } from "../utils/utils";
+// import { getTwoWeekPeriods } from "../utils/utils";
 
 export type TwoWeekData = {
+  start_date: string;
+  end_date: string;
   total_questions: number;
   total_correct: number;
   correct_percentage: number;
 };
 
 export type ExerciseAnalysisData = {
-  first_2week: TwoWeekData;
-  second_2week: TwoWeekData;
-  // third_2week: TwoWeekData;
-  // fourth_2week: TwoWeekData;
+  first_two_week: TwoWeekData;
+  second_two_week: TwoWeekData;
 };
 
 type ExerciseAnalysisProps = {
@@ -33,8 +33,30 @@ export const ExerciseAnalysis = ({
     </Typography>;
   }
 
-  const set = 2; // 2週間を何セット取得するか指定
-  const xAxisData = getTwoWeekPeriods(set);
+  const checkYear = (
+    start_date: string | undefined,
+    end_date: string | undefined,
+  ) => {
+    if (start_date != undefined && end_date != undefined) {
+      if (start_date.substring(0, 4) === end_date.substring(0, 4)) {
+        return start_date + "~" + end_date.substring(5, end_date.length);
+      } else {
+        return start_date + "~" + end_date;
+      }
+    } else {
+      return "";
+    }
+  };
+
+  const first_two_week = checkYear(
+    exerciseAnalysisData?.first_two_week.start_date,
+    exerciseAnalysisData?.first_two_week.end_date,
+  );
+
+  const second_tow_week = checkYear(
+    exerciseAnalysisData?.second_two_week.start_date,
+    exerciseAnalysisData?.second_two_week.end_date,
+  );
 
   return (
     <>
@@ -45,7 +67,7 @@ export const ExerciseAnalysis = ({
         xAxis={[
           {
             scaleType: "band",
-            data: xAxisData,
+            data: [first_two_week, second_tow_week],
           },
         ]}
         yAxis={[
@@ -65,22 +87,22 @@ export const ExerciseAnalysis = ({
         series={[
           {
             data: [
-              exerciseAnalysisData?.first_2week.total_questions ?? 0,
-              exerciseAnalysisData?.second_2week.total_questions ?? 0,
+              exerciseAnalysisData?.first_two_week.total_questions ?? 0,
+              exerciseAnalysisData?.second_two_week.total_questions ?? 0,
             ],
             label: "演習数",
           },
           {
             data: [
-              exerciseAnalysisData?.first_2week.total_correct ?? 0,
-              exerciseAnalysisData?.second_2week.total_correct ?? 0,
+              exerciseAnalysisData?.first_two_week.total_correct ?? 0,
+              exerciseAnalysisData?.second_two_week.total_correct ?? 0,
             ],
             label: "正答数",
           },
           {
             data: [
-              exerciseAnalysisData?.first_2week.correct_percentage ?? 0,
-              exerciseAnalysisData?.second_2week.correct_percentage ?? 0,
+              exerciseAnalysisData?.first_two_week.correct_percentage ?? 0,
+              exerciseAnalysisData?.second_two_week.correct_percentage ?? 0,
             ],
             label: "正答率",
             yAxisKey: "right-axis",
