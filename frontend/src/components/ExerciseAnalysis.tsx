@@ -29,7 +29,7 @@ export const ExerciseAnalysis = ({
 }: ExerciseAnalysisProps) => {
   if (exerciseAnalysisData === null) {
     <Typography variant="h6" className={styles.leftAlignedText}>
-      学習状況が表示できませんでした
+      学習状況に関するデータが取得できませんでした。
     </Typography>;
   }
 
@@ -67,8 +67,6 @@ export const ExerciseAnalysis = ({
             data: [
               exerciseAnalysisData?.first_2week.total_questions ?? 0,
               exerciseAnalysisData?.second_2week.total_questions ?? 0,
-              // exerciseAnalysisData?.third_2week.total_questions ?? 0,
-              // exerciseAnalysisData?.fourth_2week.total_questions ?? 0,
             ],
             label: "演習数",
           },
@@ -76,8 +74,6 @@ export const ExerciseAnalysis = ({
             data: [
               exerciseAnalysisData?.first_2week.total_correct ?? 0,
               exerciseAnalysisData?.second_2week.total_correct ?? 0,
-              // exerciseAnalysisData?.third_2week.total_correct ?? 0,
-              // exerciseAnalysisData?.fourth_2week.total_correct ?? 0,
             ],
             label: "正答数",
           },
@@ -85,8 +81,6 @@ export const ExerciseAnalysis = ({
             data: [
               exerciseAnalysisData?.first_2week.correct_percentage ?? 0,
               exerciseAnalysisData?.second_2week.correct_percentage ?? 0,
-              // exerciseAnalysisData?.third_2week.correct_percentage ?? 0,
-              // exerciseAnalysisData?.fourth_2week.correct_percentage ?? 0,
             ],
             label: "正答率",
             yAxisKey: "right-axis",

@@ -25,10 +25,12 @@ export const Home = () => {
         setUserName(storedUserName);
         if (storedUserIsAdmin === "true") {
           navigate("/admin-home");
+          return;
         }
       }
       if (storedUserName === null) {
         navigate("/login");
+        return;
       }
 
       const userId = localStorage.getItem("rarecheck-userId");
