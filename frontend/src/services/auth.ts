@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { LoginFormValues } from "../pages/Login";
 import { SingupFormValues } from "../pages/SignUp";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "http://localhost:5000", // バックエンドのベースURL
   headers: {
     "Content-Type": "application/json",
