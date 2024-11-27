@@ -14,8 +14,8 @@ export const Exercise: React.FC = () => {
   const navigate = useNavigate();
   const storedUserId = localStorage.getItem("rarecheck-userId");
   const location = useLocation();
-  const filter = location.state;
-  console.log(filter);   
+  const requestPayload = location.state;
+  console.log("Received Payload:", requestPayload);
 
   const [questions, setQuestions] = useState<GetExercise[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -24,7 +24,6 @@ export const Exercise: React.FC = () => {
   const [allResults, setAllResults] = useState<AllExerciseResult[]>([]);
   const [isQuizComplete, setIsQuizComplete] = useState<boolean>(false);
 
-  // ログイン状態の確認
   useEffect(() => {
     const storedUserName = localStorage.getItem("rarecheck-username");
     const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
@@ -40,7 +39,7 @@ export const Exercise: React.FC = () => {
       try {
         const response = await axios.post(
           'http://localhost:5000/rarecheck/questions',
-          filter,
+          requestPayload,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -57,9 +56,11 @@ export const Exercise: React.FC = () => {
     };
 
     fetchQuestions();
-  }, [filter, navigate]);
+  }, [requestPayload, navigate]);
 
   const handleClick = async (option: string) => {
+    if (questions.length === 0) return; // `questions`が空の場合は処理を中止
+
     const isCorrect = option === questions[currentQuestionIndex].correct_option;
     setSelectedOption(option);
     setIsAnswered(true);
@@ -87,7 +88,7 @@ export const Exercise: React.FC = () => {
     const postResult = async (result: PostResult) => {
       try {
         await axios.post(
-          `http://localhost:5000/rarecheck/questions/${storedUserId}/answer`, 
+          `http://localhost:5000/rarecheck/questions/${questions[currentQuestionIndex].id}/answer`,
           result,
           {
             headers: { 'Content-Type': 'application/json' },
@@ -119,17 +120,23 @@ export const Exercise: React.FC = () => {
     }
   };
 
-  // A, B, Cのラベルを選択肢に関連付ける関数
   const getLabelForOption = (index: number) => {
     return String.fromCharCode(65 + index); // 0 => "A", 1 => "B", 2 => "C"
   };
+
+  // `questions`が空でないことを確認する条件付きレンダリング
+  if (questions.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Page login={true}>
       <div className={styles.container}>
         {!isQuizComplete ? (
           <>
-            <h3>問題演習（{currentQuestionIndex + 1}/{questions.length}）</h3>
+            <h3>
+              問題演習（{currentQuestionIndex + 1}/{questions.length}）
+            </h3>
             <p className={styles.questionBox}>
               {questions[currentQuestionIndex].question}
             </p>
@@ -144,7 +151,7 @@ export const Exercise: React.FC = () => {
                     onClick={() => handleClick(option)}
                     disabled={isAnswered}
                   >
-                    {getLabelForOption(index)} {/* A, B, C のラベル */}
+                    {getLabelForOption(index)}
                   </Button>
                   <span> {option}</span>
                 </div>
@@ -166,34 +173,43 @@ export const Exercise: React.FC = () => {
                   </p>
                 </div>
                 <p>
-                  正解: {getLabelForOption(
+                  正解:{" "}
+                  {getLabelForOption(
                     questions[currentQuestionIndex].options.indexOf(
                       questions[currentQuestionIndex].correct_option
-                    )
+                    ),
                   )}
                 </p>
                 <p>解説：</p>
                 <p>{questions[currentQuestionIndex].explanation}</p>
                 {allResults.length !== questions.length ? (
-                  <Box className="nextButton" textAlign="center" py={3}>
+                  <Box className="nextButton " textAlign="center" py={3}>
                     <Button
                       onClick={handleNextQuestion}
                       disabled={!isAnswered}
                       variant="contained"
                       size="large"
-                      sx={{ borderRadius: 50, alignItems: "center", backgroundColor: "#2563EB" }}
+                      sx={{
+                        borderRadius: 50,
+                        alignItems: "center",
+                        backgroundColor: "#2563EB",
+                      }}
                     >
                       次の問題へ
                     </Button>
                   </Box>
                 ) : (
-                  <Box className="nextButton" textAlign="center" py={3}>
+                  <Box className="nextButton " textAlign="center" py={3}>
                     <Button
                       onClick={handleResult}
                       disabled={!isAnswered}
                       variant="contained"
                       size="large"
-                      sx={{ borderRadius: 50, alignItems: "center", backgroundColor: "#2563EB" }}
+                      sx={{
+                        borderRadius: 50,
+                        alignItems: "center",
+                        backgroundColor: "#2563EB",
+                      }}
                     >
                       演習結果へ
                     </Button>
@@ -206,12 +222,16 @@ export const Exercise: React.FC = () => {
           <div>
             <div className={styles.resultLayout}>
               <Result allResultsRows={allResults} />
-              <Box className="saveButton" textAlign="center" py={3}>
+              <Box className="saveButton " textAlign="center" py={3}>
                 <Button
                   onClick={() => navigate("/")}
                   variant="contained"
                   size="large"
-                  sx={{ borderRadius: 50, alignItems: "center", backgroundColor: "#2563EB" }}
+                  sx={{
+                    borderRadius: 50,
+                    alignItems: "center",
+                    backgroundColor: "#2563EB",
+                  }}
                 >
                   ホーム画面へ戻る
                 </Button>

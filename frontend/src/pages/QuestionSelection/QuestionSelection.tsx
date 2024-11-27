@@ -21,25 +21,24 @@ import { categoryGroup } from "./selections/categoryGroup";
 import { questionCounts } from "./selections/questionCounts";
 import { difficultyLevels } from "./selections/difficultyLevels";
 
-export const QuestionSelection = () => {
+// 関数を別のファイルからインポート
+import { convertStepRangeToList, convertDifficultyToNumber } from "../../services/convertFunctions";
 
-  // ログイン状態の確認
+export const QuestionSelection = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ローカルストレージからユーザー名と管理者権限を取得、ログイン状態を確認
     const storedUserName = localStorage.getItem("rarecheck-username");
     const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
     if (storedUserIsAdmin === "true") {
-        navigate("/admin-home");
-      }
+      navigate("/admin-home");
+    }
     if (storedUserName === null) {
       navigate("/login");
     }
   }, [navigate]);
 
-  // 演習問題絞り込みのステート
   const [filter, setFilter] = useState({
     step_ranges: [] as string[],
     difficulty: [] as string[],
@@ -47,7 +46,6 @@ export const QuestionSelection = () => {
     question_count: "" as string,
   });
 
-  // ステップの選択
   const handleSteps = (e: SelectChangeEvent<string[]>) => {
     const value = e.target.value;
     setFilter((prev) => ({
@@ -56,7 +54,6 @@ export const QuestionSelection = () => {
     }));
   };
 
-  // カテゴリの選択
   const handleCategories = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFilter((prev) => ({
@@ -67,7 +64,6 @@ export const QuestionSelection = () => {
     }));
   };
 
-  // 難易度の選択
   const handleDifficulties = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFilter((prev) => ({
@@ -78,7 +74,6 @@ export const QuestionSelection = () => {
     }));
   };
 
-  // 問題数の選択
   const handleQuestionCount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFilter((prev) => ({
@@ -87,10 +82,31 @@ export const QuestionSelection = () => {
     }));
   };
 
-  // 絞り込み内容から演習問題をリクエスト
   const OnClickStartExercise = () => {
-    console.log(filter);
-    navigate("/exercise", { state: filter });
+    // ステップ範囲の変換
+    const stepRanges = filter.step_ranges.map((range) => convertStepRangeToList(range));
+
+    // 難易度の変換
+    const difficultyNumbers = filter.difficulty.map(convertDifficultyToNumber);
+
+    // 問題数の変換
+    let questionCount:number|string = filter.question_count;
+    if (questionCount === "全") {
+      questionCount = 9999; 
+    } else {
+      questionCount = parseInt(questionCount, 10);
+    }
+
+    // APIリクエスト用のオブジェクトを作成
+    const requestPayload = {
+      step_ranges: stepRanges,
+      difficulty: difficultyNumbers,
+      categories: filter.categories,
+      question_count: questionCount,
+    };
+
+    console.log(requestPayload);
+    navigate("/exercise", { state: requestPayload });
   };
 
   return (
@@ -179,6 +195,16 @@ export const QuestionSelection = () => {
                 />
               );
             })}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="全"
+                  checked={filter.question_count === "全"}
+                  onChange={handleQuestionCount}
+                />
+              }
+              label="全問"
+            />
           </div>
 
           <Box className="startButton" textAlign="center" py={3}>
