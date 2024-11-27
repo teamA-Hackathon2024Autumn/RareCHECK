@@ -230,23 +230,32 @@ def admin_get_question(id):
 
 # 一般ユーザー(受講生)
 # 問題一覧表示
-@app.route('/rarecheck/questions', methods=['GET'])
-def get_questions():
-    questions = Question.query.all()
-    question = []
+@app.route('/rarecheck/users/questions', methods=['GET']) # sessionからuser_idを取得しているためurlにuser_idを含めていません。
+def user_get_questions():
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return jsonify({'message': 'Unauthorized. Please log in.'}), 401
+
+    # ユーザーが作成した問題一覧を取得
+    questions = Question.query.filter(Question.user_id == user_id).all()
+
+    if not questions:
+        return jsonify({"message": "Question don't exist."}), 404
+
+    question_list = []
     for q in questions:
-        question.append({
+        question_list.append({
             "id": q.id,
             "question": q.question,
             "step": q.step,
-            "created_at": q.created_at,
-            "comment": q.comment,
+            "category_name": q.category.category_name,
+            "created_at": q.created_at.isoformat(),
+            "has_comment": q.has_comment,
             "is_accept": q.is_accept
         })
 
-    return jsonify(question)
-
-
+    return jsonify(question_list)
    
 # 問題作成
 @app.route('/rarecheck/questions/create', methods=['POST'])
