@@ -89,10 +89,8 @@ export const QuestionSelection = () => {
 
   // 絞り込み内容から演習問題をリクエスト
   const OnClickStartExercise = () => {
-    console.log(filter.step_ranges);
-    console.log(filter.categories);
-    console.log(filter.difficulty);
-    console.log(filter.question_count);
+    console.log(filter);
+    navigate("/exercise", { state: filter });
   };
 
   return (
