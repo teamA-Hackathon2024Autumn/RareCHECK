@@ -35,10 +35,22 @@ export const Header = () => {
           <Logo />
         </div>
         <div className={styles.headerButtonLayout}>
-          <Button variant="contained" onClick={() => navigate("/userinfo")}>
+          <Button
+            variant="contained"
+            onClick={() => navigate("/userinfo")}
+            sx={{
+              backgroundColor: "#2563EB",
+            }}
+          >
             マイページ
           </Button>
-          <Button variant="outlined" onClick={handleLogout}>
+          <Button
+            variant="outlined"
+            onClick={handleLogout}
+            sx={{
+              borderColor: "#2563EB",
+            }}
+          >
             ログアウト
           </Button>
         </div>

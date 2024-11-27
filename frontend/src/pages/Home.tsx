@@ -1,27 +1,58 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Page } from "../components/layout/Page";
-import { QuestionButton } from "../components/common/QuestionButton";
+import {
+  ExerciseAnalysis,
+  ExerciseAnalysisData,
+} from "../components/ExerciseAnalysis";
+import { fetchExerciseAnalysisData } from "../services/api";
 import styles from "./Home.module.css";
+import { QuestionButtonArea } from "../components/QuestionButtonArea";
 
 export const Home = () => {
   const [userName, setUserName] = useState<string | null>("");
+  const [exerciseAnalysisData, setExerciseAnalysisData] =
+    useState<ExerciseAnalysisData | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ローカルストレージからユーザー名を取得
-    const storedUserName = localStorage.getItem("rarecheck-username");
-    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+    const fetchData = async () => {
+      // ローカルストレージからユーザー名を取得
+      const storedUserName = localStorage.getItem("rarecheck-username");
+      const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
-    if (storedUserName != "") {
-      setUserName(storedUserName);
-      if (storedUserIsAdmin === "true") {
-        navigate("/admin-home");
+      if (storedUserName != "") {
+        setUserName(storedUserName);
+        if (storedUserIsAdmin === "true") {
+          navigate("/admin-home");
+        }
       }
-    }
-    if (storedUserName === null) {
-      navigate("/login");
-    }
+      if (storedUserName === null) {
+        navigate("/login");
+      }
+
+      const userId = localStorage.getItem("rarecheck-userId");
+      if (userId) {
+        const result = await fetchExerciseAnalysisData(userId);
+        console.log(result);
+        setExerciseAnalysisData(result);
+
+        // 実際のリクエストの処理
+        // if ("data" in result) {
+        //   console.log("OK");
+        //   // if (result.status == 200) {
+        //   //   console.log("OK");
+        //   // }
+        // } else {
+        //   console.log("Error");
+        //   // エラー時のメッセージを表示
+        //   // console.error(result.message);
+        //   // setErrorMessage(result.message);
+        // }
+      }
+    };
+
+    fetchData();
   }, [navigate]);
 
   return (
@@ -55,13 +86,13 @@ export const Home = () => {
           お知らせ
         </div>
         <div
-          className={styles.dashboardItem}
+          className={`${styles.dashboardItem} ${styles.exerciseAnalysisLayout}`}
           style={{
             gridColumn: "2 / 2",
             gridRow: "7 / 13",
           }}
         >
-          学習状況
+          <ExerciseAnalysis exerciseAnalysisData={exerciseAnalysisData} />
         </div>
         <div
           className={`${styles.dashboardItem} ${styles.questionsLayout}`}
@@ -70,18 +101,7 @@ export const Home = () => {
             gridRow: "7 / 13",
           }}
         >
-          <QuestionButton variant="contained" size="large">
-            問題演習
-          </QuestionButton>
-          <QuestionButton variant="contained" size="large">
-            問題作成
-          </QuestionButton>
-          <QuestionButton variant="outlined" size="large">
-            問題一覧
-          </QuestionButton>
-          <QuestionButton variant="outlined" size="large">
-            作成した問題一覧
-          </QuestionButton>
+          <QuestionButtonArea />
         </div>
       </div>
     </Page>

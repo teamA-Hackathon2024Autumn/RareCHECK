@@ -30,7 +30,7 @@ export const AdminHome = () => {
           <h3 className={styles.userName}>ユーザー名: {userName}</h3>
         </div>
         <div className={styles.noticeLayout}>
-          <h2 className={styles.noticeTitle}>お知らせ</h2>
+          <h3 className={styles.noticeTitle}>お知らせ</h3>
         </div>
         <div className={styles.buttonLayout}>
           <div className={styles.buttonArea}>
@@ -41,6 +41,7 @@ export const AdminHome = () => {
                 flex: 1,
                 height: "100%",
               }}
+              onClick={() => navigate("/QuestionsAwaitingCheck")}
             >
               確認待ち問題一覧
             </QuestionButton>
@@ -51,6 +52,7 @@ export const AdminHome = () => {
                 flex: 1,
                 height: "100%",
               }}
+              onClick={() => navigate("/AdminQuestionList")}
             >
               問題一覧
             </QuestionButton>
