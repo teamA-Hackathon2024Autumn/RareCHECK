@@ -175,7 +175,7 @@ def get_not_accept_question():
     
     return jsonify(question)
 
-# 問題詳細表示　(承認とコメントと削除ができる)
+# 問題詳細表示　(承認とコメントと削除ができる) + 問題編集
 @app.route('/rarecheck/admin/question/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def admin_get_question(id):
     question = Question.query.get(id)
@@ -202,11 +202,25 @@ def admin_get_question(id):
         # フロントから送られてきたデータを取得
         data = request.get_json()
 
+        if 'category_name' in data:
+            category = Category.query.filter_by(category_name=data.get('category_name')).first()
+            if not category:
+                return jsonify({'error': 'Invalid category_name'}), 400
+            question.category_id = category.id
+
+        question.step = data.get('step', question.step)
+        question.question = data.get('question', question.question)
+        # question.question_image = data.get('question_image', question.quesion_image) S3に保存する
+        question.correct_option = data.get('correct_option', question.correct_option)
+        question.wrong_option_1 = data.get('wrong_option_1', question.wrong_option_1)
+        question.wrong_option_2 = data.get('wrong_option_2', question.wrong_option_2)
+        question.explanation = data.get('explanation', question.explanation)
+        # question.explanation_image = data.get('explanation_image', question.explanation_image) S3に保存する
         question.comment = data.get('comment', question.comment)
         if question.comment != None:
             question.has_comment = True
-        question.is_accept = data.get('is_accept', question.is_accept)
-
+        if data.get('is_accept') is True and question.is_accept == False:
+            question.is_accept = data.get('is_accept', question.is_accept)
         db.session.commit()
 
         return jsonify({'message': 'Question updated Successfully'}), 200
@@ -342,7 +356,7 @@ def get_question(id):
         # question.question_image = data.get('question_image', question.quesion_image) S3に保存する
         question.correct_option = data.get('correct_option', question.correct_option)
         question.wrong_option_1 = data.get('wrong_option_1', question.wrong_option_1)
-        question.wrong_option_2 = data.get('wrong_opiton_2', question.wrong_option_2)
+        question.wrong_option_2 = data.get('wrong_option_2', question.wrong_option_2)
         question.explanation = data.get('explanation', question.explanation)
         # question.explanation_image = data.get('explanation_image', question.explanation_image) S3に保存する
 
