@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Select,
@@ -16,61 +17,83 @@ import {
 import { Page } from "../../components/layout/Page";
 import styles from "./QuestionSelection.module.css";
 import { stepGroups } from "./selections/stepGroups";
-import { categories } from "./selections/categories";
+import { categoryGroup } from "./selections/categoryGroup";
 import { questionCounts } from "./selections/questionCounts";
 import { difficultyLevels } from "./selections/difficultyLevels";
 
 export const QuestionSelection = () => {
 
+  // ログイン状態の確認
+  const navigate = useNavigate();
 
-  const [selectedSteps, setSelectedSteps] = useState<string[]>([]);
-  const [selectedDifficulties, setSelectedDifficulties] =useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedQuestionCount, setSelectedQuestionCount] = useState("");
+  useEffect(() => {
+    // ローカルストレージからユーザー名と管理者権限を取得、ログイン状態を確認
+    const storedUserName = localStorage.getItem("rarecheck-username");
+    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+
+    if (storedUserIsAdmin === "true") {
+        navigate("/admin-home");
+      }
+    if (storedUserName === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // 演習問題絞り込みのステート
+  const [filter, setFilter] = useState({
+    step_ranges: [] as string[],
+    difficulty: [] as string[],
+    categories: [] as string[],
+    question_count: "" as string,
+  });
 
   // ステップの選択
   const handleSteps = (e: SelectChangeEvent<string[]>) => {
     const value = e.target.value;
-    // `value` の型が文字列の配列であることを保証
-    setSelectedSteps(Array.isArray(value) ? value : value.split(","));
+    setFilter((prev) => ({
+      ...prev,
+      step_ranges: Array.isArray(value) ? value : value.split(","),
+    }));
   };
 
   // カテゴリの選択
   const handleCategories = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSelectedCategories((prevSelectedCategories) =>
-      e.target.checked
-        ? [...prevSelectedCategories, value] // チェックが入った場合は配列に追加
-        : prevSelectedCategories.filter((category) => category !== value) // チェックが外れた場合は配列から削除
-    );
+    setFilter((prev) => ({
+      ...prev,
+      categories: e.target.checked
+        ? [...prev.categories, value]
+        : prev.categories.filter((category) => category !== value),
+    }));
   };
 
+  // 難易度の選択
   const handleDifficulties = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSelectedDifficulties((prevSelectedDifficulties) =>
-      e.target.checked
-        ? [...prevSelectedDifficulties, value] // チェックが入った場合は配列に追加
-        : prevSelectedDifficulties.filter((difficulty) => difficulty !== value) // チェックが外れた場合は配列から削除
-    );
+    setFilter((prev) => ({
+      ...prev,
+      difficulty: e.target.checked
+        ? [...prev.difficulty, value]
+        : prev.difficulty.filter((difficulty) => difficulty !== value),
+    }));
   };
 
   // 問題数の選択
   const handleQuestionCount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (e.target.checked) {
-      setSelectedQuestionCount(value); // チェックが入った場合に選択
-    } else {
-      setSelectedQuestionCount(""); // チェックが外れた場合は選択を解除
-    }
+    setFilter((prev) => ({
+      ...prev,
+      question_count: e.target.checked ? value : "",
+    }));
   };
 
   // 絞り込み内容から演習問題をリクエスト
   const OnClickStartExercise = () => {
-    console.log(selectedSteps);
-    console.log(selectedCategories);
-    console.log(selectedDifficulties);
-    console.log(selectedQuestionCount);
-  }
+    console.log(filter.step_ranges);
+    console.log(filter.categories);
+    console.log(filter.difficulty);
+    console.log(filter.question_count);
+  };
 
   return (
     <Page login={true}>
@@ -85,14 +108,14 @@ export const QuestionSelection = () => {
                 labelId="step-multiple-checkbox-label"
                 id="step-multiple-checkbox"
                 multiple
-                value={selectedSteps}
+                value={filter.step_ranges}
                 onChange={handleSteps}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selectedSteps: string[]) => selectedSteps.join(", ")}
+                renderValue={(step_ranges) => step_ranges.join(", ")}
               >
                 {stepGroups.map((stepGroup) => (
                   <MenuItem key={stepGroup} value={stepGroup}>
-                    <Checkbox checked={selectedSteps.includes(stepGroup)} />
+                    <Checkbox checked={filter.step_ranges.includes(stepGroup)} />
                     <ListItemText primary={stepGroup} />
                   </MenuItem>
                 ))}
@@ -103,15 +126,17 @@ export const QuestionSelection = () => {
 
           <div>
             <h3>カテゴリで絞り込む（０つ以上選択）</h3>
-            {categories.map((category) => {
+            {categoryGroup.map((category) => {
               return (
                 <FormControlLabel
                   key={category}
-                  control={<Checkbox
-                    value={category}
-                    checked={selectedCategories.includes(category)}
-                    onChange={handleCategories}
-                    />}
+                  control={
+                    <Checkbox
+                      value={category}
+                      checked={filter.categories.includes(category)}
+                      onChange={handleCategories}
+                    />
+                  }
                   label={category}
                 />
               );
@@ -125,11 +150,13 @@ export const QuestionSelection = () => {
               return (
                 <FormControlLabel
                   key={difficultyLevel}
-                  control={<Checkbox 
-                    value={difficultyLevel}
-                    checked={selectedDifficulties.includes(difficultyLevel)}
-                    onChange={handleDifficulties}
-                    />}
+                  control={
+                    <Checkbox
+                      value={difficultyLevel}
+                      checked={filter.difficulty.includes(difficultyLevel)}
+                      onChange={handleDifficulties}
+                    />
+                  }
                   label={difficultyLevel}
                 />
               );
@@ -144,17 +171,19 @@ export const QuestionSelection = () => {
                 <FormControlLabel
                   key={questionCount}
                   control={
-                  <Checkbox 
-                    value={questionCount.toString()}
-                    checked={selectedQuestionCount===questionCount.toString()}
-                    onChange={handleQuestionCount}/>}
+                    <Checkbox
+                      value={questionCount.toString()}
+                      checked={filter.question_count === questionCount.toString()}
+                      onChange={handleQuestionCount}
+                    />
+                  }
                   label={`${questionCount}問`}
                 />
               );
             })}
           </div>
 
-          <Box className="startButton " textAlign="center" py={3}>
+          <Box className="startButton" textAlign="center" py={3}>
             <Button
               onClick={OnClickStartExercise}
               variant="contained"

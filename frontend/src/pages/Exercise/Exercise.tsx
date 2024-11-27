@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Box, Button } from "@mui/material";
 
@@ -6,35 +7,37 @@ import styles from "./Exercise.module.css";
 import { Page } from "../../components/layout/Page";
 import { Result } from "./Result";
 import { questions } from "./SampleQuestions";
+import { PostResult } from "../../types/api/PostResult";
+// import { RequestExercise } from "../../types/api/RequestExercise";
+import { AllExerciseResult } from "../../types/AllExerciseResult";
 
 export const Exercise: React.FC = () => {
- 
-  type Result = {
-    question: string;
-    selectedOption: string;
-    correctAnswer: string;
-    id: number;
-    isCorrect: boolean;
-    category: string;
-    difficulty: string;
-    step: string | number;
-  };
+  const navigate = useNavigate();
+  const storedUserId = localStorage.getItem("rarecheck-userId");
+  
+  // ログイン状態の確認
+  useEffect(() => {
+    // ローカルストレージからユーザー名と管理者権限を取得、ログイン状態を確認
+    const storedUserName = localStorage.getItem("rarecheck-username");
+    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+
+    if (storedUserIsAdmin === "true") {
+        navigate("/admin-home");
+      }
+    if (storedUserName === null) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); //問題の配列を順番に取り出すためのステート
   const [selectedOption, setSelectedOption] = useState<string | null>(null); //回答した選択肢を保持するステート
   const [isAnswered, setIsAnswered] = useState(false); //回答済みの問題かどうかを保持するステート
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]); //選択肢の配列の中身をランダムに入れ替えたあとの状態を保持するステート
-  const [result, setResult] = useState<Result>(); //１問ごとに回答の結果を格納し、APIで送信するためのステート
-  const [allResults, setAllResults] = useState<Result[]>([]);
+  // const [result, setResult] = useState<PostResult>({user_id:"", question_id:"",is_solved:false}); //１問ごとに回答の結果を格納し、APIで送信するためのステート
+  const [allResults, setAllResults] = useState<AllExerciseResult[]>([]); //演習結果に表示するための演習記録
   const [isQuizComplete, setIsQuizComplete] = useState<boolean>(false);
 
-  /*resultに格納するプロパティ
-問題id,isCorrrect,datetime
-*/
-
-  /*allResultsに格納するオブジェクトの配列
-問題id,isCorrect
-*/
 
   useEffect(() => {
     // 選択肢をランダムにシャッフル
@@ -46,14 +49,15 @@ export const Exercise: React.FC = () => {
     return array.sort(() => Math.random() - 0.5);
   };
 
+
   //選んだ選択肢がanswerと一致するか（boolean）をisCorrectに格納
   const handleClick = async (option: string) => {
     const isCorrect = option === questions[currentQuestionIndex].answer;
     setSelectedOption(option);
     setIsAnswered(true);
 
-    // 結果を保存
-    const newResult = {
+    // 演習結果表示のための記録を保存
+    const newAllResult = {
       question: questions[currentQuestionIndex].question,
       selectedOption: option,
       correctAnswer: questions[currentQuestionIndex].answer,
@@ -64,22 +68,36 @@ export const Exercise: React.FC = () => {
       step: questions[currentQuestionIndex].step,
     };
 
-    const newAllResults = [...allResults, newResult];
+    const newAllResults = [...allResults, newAllResult];
     setAllResults(newAllResults);
-    setResult(newResult);
+
+    const newResult = {
+      user_id:storedUserId,
+      question_id:questions[currentQuestionIndex].id,
+      is_solved:isCorrect,
+    };
+
+    // setResult(newResult);
 
     // 結果をAPIに保存
-    const postResult = async () => {
+    const postResult = async (result: PostResult) => {
       try {
-        await axios.post("http://localhost:5000/submit", { result });
-        console.log("post completed!");
+      await axios.post(
+        `http://localhost:5000/rarecheck/questions/${storedUserId}/answer`, 
+        result, // POSTのボディ（送信するデータ）
+        {headers: {'Content-Type': 'application/json'},
+        withCredentials: true, // セッション管理に必要
+        }
+      );
+      console.log("post completed!");
       } catch (error) {
-        console.error("Error saving result:", error);
+      console.error("Error saving result:", error);
       }
     };
-    postResult();
-  };
+    postResult(newResult);
 
+  }
+  
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
@@ -206,6 +224,7 @@ export const Exercise: React.FC = () => {
               <Result allResultsRows={allResults} />
               <Box className="saveButton " textAlign="center" py={3}>
                 <Button
+                  onClick={()=>navigate("/")}
                   variant="contained"
                   size="large"
                   sx={{
