@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from models import db, Question, User, Category, LearningRecord
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
 from flask_session import Session
 from models import db, Question, User, Category
+from datetime import datetime, timedelta
 import uuid
 import traceback
 import random
@@ -451,6 +452,80 @@ def get_answer(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to record answer'}), 500
+    
+
+# 学習記録(グラフ)
+@app.route('/rarecheck/users/<int:user_id>/exercise_analysis', methods=['GET'])
+def get_record(user_id):
+    try:
+        today = datetime.now()
+
+        # 2週間前の日付を計算
+        two_weeks_ago = today - timedelta(days=14)
+        # 4週間前の日付を計算
+        four_weeks_ago = today - timedelta(days=28)
+
+        # (2週間前)
+        # ユーザーの演習数をカウント
+        total_questions_first = db.session.query(func.count(LearningRecord.id)).filter(
+            LearningRecord.user_id == user_id,
+            LearningRecord.date.between(two_weeks_ago, today)
+        ).scalar()
+
+        # 正答数をカウント 
+        total_correct_first = db.session.query(func.count(LearningRecord.id)).filter(
+            LearningRecord.user_id == user_id,
+            LearningRecord.date.between(two_weeks_ago, today),
+            LearningRecord.is_solved == True
+        ).scalar()
+
+        # 正答率の計算
+        correct_percentage_first = (
+            (total_correct_first / total_questions_first) * 100 if total_questions_first > 0 else 0
+        )
+
+        # (4週間前)
+        # ユーザーの演習数をカウント
+        total_questions_second = db.session.query(func.count(LearningRecord.id)).filter(
+            LearningRecord.user_id == user_id,
+            LearningRecord.date.between(four_weeks_ago, two_weeks_ago)
+        ).scalar()
+
+        # 正答数をカウント 
+        total_correct_second = db.session.query(func.count(LearningRecord.id)).filter(
+            LearningRecord.user_id == user_id,
+            LearningRecord.date.between(four_weeks_ago, two_weeks_ago),
+            LearningRecord.is_solved == True
+        ).scalar()
+
+        # 正答率の計算
+        correct_percentage_second = (
+            (total_correct_second / total_questions_second) * 100 if total_questions_second > 0 else 0
+        )
+
+
+        records = {
+            "first_two_week": {
+                "start_date": two_weeks_ago.strftime('%Y-%m-%d'),
+                "end_date": today.strftime('%Y-%m-%d'),
+                "total_questions": total_correct_first,
+                "total_correct": total_correct_first,
+                "correct_percentage": round(correct_percentage_first, 2)
+            },
+            "second_two_week": {
+                "start_date": four_weeks_ago.strftime('%Y-%m-%d'),
+                "end_date": two_weeks_ago.strftime('%Y-%m-%d'),
+                "total_questions": total_questions_second,
+                "total_correct": total_correct_second,
+                "correct_percentage": round(correct_percentage_second, 2)
+            }
+        }
+
+        return jsonify(records), 200
+
+
+    except Exception as e:
+        return jsonify({"message": "Faild to calculate user's analysis."}), 500
 
     
 @app.errorhandler(Exception)
