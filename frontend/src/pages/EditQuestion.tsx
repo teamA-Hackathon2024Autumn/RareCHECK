@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import {
   Alert,
@@ -20,25 +20,26 @@ import { PostEdit } from "../types/api/PostEdit";
 
 export const EditQuestion: React.FC = () => {
  
- 
   const navigate = useNavigate();
+  const location = useLocation();
+  const questionId = location.state?.id;
   // const storedUserId = localStorage.getItem("rarecheck-userId");
   
  // ログイン状態の確認
   useEffect(() => {
     // ローカルストレージからユーザー名と管理者権限を取得、ログイン状態を確認
     const storedUserName = localStorage.getItem("rarecheck-username");
-    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+    // const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
-    if (storedUserIsAdmin === "true") {
-        navigate("/admin-home");
-      }
+    // if (storedUserIsAdmin === "true") {
+    //     navigate("/admin-home");
+    //   }
     if (storedUserName === null) {
       navigate("/login");
     }
   }, [navigate]);
 
- 
+  
   /*stateの初期値にするquizのデフォルト*/
   const defaultQuiz = {
     step:"",
@@ -55,11 +56,10 @@ export const EditQuestion: React.FC = () => {
     has_comment:false,
     category_name:"",
   };
-
-
+  
   /*1~500までの配列*/
   const steps = Array.from({ length: 500 }, (_, i) => (i + 1).toString());
-
+  
   const categories = [
     "インフラ",
     "プログラミング",
@@ -71,17 +71,27 @@ export const EditQuestion: React.FC = () => {
     "ビジネススキル",
     "その他",
   ];
-
+  
   /*getリクエストした問題を格納するためのstate（axiosで取得できるようになったら初期値を空のobjにする）*/
   const [quiz, setQuiz] = useState(defaultQuiz);
-
+  
   useEffect(() => {
-    const getQuiz = async() => {
-      const res = await axios.get('http://localhost:5000/rarecheck/questions/1/edit')
-      setQuiz(res.data);
-    }
+    const getQuiz = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/rarecheck/questions/${questionId}/edit`, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        });
+        setQuiz(res.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        if (axios.isAxiosError(error)) {
+          console.error('Axios error:', error.response?.data);
+        }
+      }
+    };
     getQuiz();
-  },[]);
+   }, []);
 
   // 冗長なのでuseReduseで作った方がすっきりしそう
   const changeStep = (e: any) => {
@@ -141,11 +151,11 @@ export const EditQuestion: React.FC = () => {
       explanation:quiz.explanation,
       // explanation_image:quiz.explanation_image,
       category_name:quiz.category_name,
-    }
+    };
     const postEditQuestion = async (editQuiz:PostEdit) => {
     try {
       await axios.put(
-      `http://localhost:5000/rarecheck/questions/1/edit`, 
+      `http://localhost:5000/rarecheck/questions/${questionId}/edit`, 
       editQuiz, // POSTのボディ（送信するデータ）
       {headers: {'Content-Type': 'application/json'},
         withCredentials: true, // セッション管理に必要

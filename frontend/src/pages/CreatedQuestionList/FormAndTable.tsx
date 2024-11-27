@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,6 +14,7 @@ import { visuallyHidden } from "@mui/utils";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 
+import { GetCreatedList } from "../../types/api/GetCreatedList";
 // ソートのための比較関数
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
   if (a[orderBy] === "" && b[orderBy] !== "") {
@@ -50,36 +52,36 @@ interface HeadCell {
 }
 
 // 問題のオブジェクトの型定義
-export type CreatedQuestionData = {
-  id: number;
+type CreatedQuestionData = {
+  id: number | string;
   question: string;
   step: number | string;
-  category: string;
-  date: Date;
-  hasComment: boolean;
-  isAccepted: boolean;
+  category_name: string;
+  created_at: string;
+  has_comment: boolean;
+  is_accept: boolean;
   btn?: string;
 };
 
 // propsの型定義
 type CreatedQuestionProps = {
-  rows: CreatedQuestionData[];
+  rows: GetCreatedList[];
 };
 
 const headCells: readonly HeadCell[] = [
   { id: "id", numeric: true, disablePadding: true, label: "問題ID" },
   { id: "question", numeric: false, disablePadding: false, label: "問題本文" },
   { id: "step", numeric: true, disablePadding: false, label: "ステップ" },
-  { id: "category", numeric: false, disablePadding: false, label: "カテゴリ" },
-  { id: "date", numeric: false, disablePadding: false, label: "作成年月日" },
+  { id: "category_name", numeric: false, disablePadding: false, label: "カテゴリ" },
+  { id: "created_at", numeric: false, disablePadding: false, label: "作成年月日" },
   {
-    id: "hasComment",
+    id: "has_comment",
     numeric: false,
     disablePadding: false,
     label: "コメント",
   },
   {
-    id: "isAccepted",
+    id: "is_accept",
     numeric: false,
     disablePadding: false,
     label: "承認状況",
@@ -133,6 +135,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 // 検索フォームと表の関数コンポーネント
 export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
+  const navigate = useNavigate();
+
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof CreatedQuestionData>("id");
   const [page, setPage] = React.useState(0);
@@ -171,17 +175,17 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
           row.id.toString().includes(searchQuery.toLowerCase()) ||
           row.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row.step.toString().includes(searchQuery.toLowerCase()) ||
-          row.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.date.toString().includes(searchQuery.toLowerCase()) ||
-          row.hasComment.toString().includes(searchQuery.toLowerCase()) ||
-          row.isAccepted.toString().includes(searchQuery.toLowerCase()),
+          row.category_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.created_at.toString().includes(searchQuery.toLowerCase()) ||
+          row.has_comment.toString().includes(searchQuery.toLowerCase()) ||
+          row.is_accept.toString().includes(searchQuery.toLowerCase()),
       )
       .sort(getComparator(order, orderBy))
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   }, [order, orderBy, page, rowsPerPage, searchQuery]);
 
   const handleButtonClick = (row: CreatedQuestionData) => {
-    alert(`確認ボタンが押されました: 問題ID ${row.id}`);
+    navigate('/editquestion', { state: { id: row.id } });
   };
 
   return (
@@ -225,16 +229,16 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
                     {row.step}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
-                    {row.category}
+                    {row.category_name}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
-                    {row.date.toLocaleDateString("ja-JP")}
+                    {row.created_at}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
-                    {row.hasComment ? "あり" : "なし"}
+                    {row.has_comment ? "あり" : "なし"}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
-                    {row.isAccepted ? "承認済み" : "未承認"}
+                    {row.is_accept ? "承認済み" : "未承認"}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
                     <Button
