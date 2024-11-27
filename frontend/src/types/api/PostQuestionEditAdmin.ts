@@ -11,6 +11,6 @@ export type PostQuestionEditAdmin = {
   is_accept:boolean,
   difficulty:string,
   comment:string,
-  id:number,
+  question_id:number,
   category_name:string,
 };

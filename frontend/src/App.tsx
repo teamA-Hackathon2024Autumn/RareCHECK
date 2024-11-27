@@ -3,7 +3,7 @@ import { Login } from "./pages/Login";
 import { SignUp } from "./pages/SignUp";
 import { UserInfo } from "./pages/UserInfo";
 import { AdminHome } from "./pages/AdminHome";
-import { QuestionSelection } from "./pages/QuestionSelection";
+import { QuestionSelection } from "./pages/QuestionSelection/QuestionSelection";
 import { Exercise } from "./pages/Exercise/Exercise";
 import { CreateQuestion } from "./pages/CreateQuestion";
 import { CreatedQuestionList } from "./pages/CreatedQuestionList/CreatedQuestionList";
