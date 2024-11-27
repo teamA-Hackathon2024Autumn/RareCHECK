@@ -97,7 +97,7 @@ export const Exercise: React.FC = () => {
     postResult(newResult);
 
   }
-  
+
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);

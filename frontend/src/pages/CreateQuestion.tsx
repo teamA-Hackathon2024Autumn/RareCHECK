@@ -18,7 +18,6 @@ import styles from "./CreateQuestion.module.css";
 import { PostCreate } from "../types/api/PostCreate";
 
 export const CreateQuestion: React.FC = () => {
-  /*stetの初期値にするquizのデフォルト*/
 
   const navigate = useNavigate();
   const storedUserId = localStorage.getItem("rarecheck-userId");
@@ -109,7 +108,7 @@ export const CreateQuestion: React.FC = () => {
     const postCreateQuestion = async (quiz:PostCreate) => {
     try {
       await axios.post(
-      `http://localhost:5000/rarecheck/questions/${storedUserId}/answer`, 
+      `http://localhost:5000/rarecheck/questions/create`, 
       quiz, // POSTのボディ（送信するデータ）
       {headers: {'Content-Type': 'application/json'},
         withCredentials: true, // セッション管理に必要
@@ -121,6 +120,8 @@ export const CreateQuestion: React.FC = () => {
     }
     };
     postCreateQuestion(quiz);
+
+    navigate("/createdquestionlist")
   }
   
 
