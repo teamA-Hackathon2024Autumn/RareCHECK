@@ -16,6 +16,14 @@
   border-radius: 3%;
 }
 
+.exerciseAnalysisLayout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 12px 16px;
+}
+
 .questionsLayout {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

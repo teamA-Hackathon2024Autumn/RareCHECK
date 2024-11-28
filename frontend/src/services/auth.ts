@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { LoginFormValues } from "../pages/Login";
 import { SingupFormValues } from "../pages/SignUp";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "http://localhost:5000", // バックエンドのベースURL
   headers: {
     "Content-Type": "application/json",
@@ -89,7 +89,6 @@ export const signup = async (data: SingupFormValues) => {
           status: error.response?.status,
           message: "APIが見つかりません",
         };
-
       console.error("その他のエラー:", error.response?.status, error.message);
     } else {
       console.error("予期しないエラー:", error);

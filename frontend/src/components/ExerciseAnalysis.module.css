@@ -1,0 +1,4 @@
+.leftAlignedText {
+  text-align: left;
+  width: 100%; /* 幅を指定して左寄せを明確化 */
+}

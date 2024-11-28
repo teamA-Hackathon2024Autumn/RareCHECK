@@ -65,10 +65,15 @@ CREATE TABLE learning_records (
     FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
--- usersのサンプルデータ
+-- usersのサンプルデータ（管理者）
 INSERT INTO users (username, email, password, is_admin) VALUES ('testuser1', 'test1@email.com', 'testtest1', TRUE);
 INSERT INTO users (username, email, password, is_admin) VALUES ('testuser2', 'test2@email.com', 'testtest2', TRUE);
 INSERT INTO users (username, email, password, is_admin) VALUES ('testuser3', 'test3@email.com', 'testtest3', TRUE);
+
+-- userのサンプルデータ（一般ユーザー）
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser4', 'test4@email.com', 'testtest4', FALSE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser5', 'test5@email.com', 'testtest5', FALSE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser6', 'test6@email.com', 'testtest6', FALSE);
 
 -- categoriesのサンプルデータ
 INSERT INTO categories (category_name) VALUES ('インフラ'),('プログラミング'),('ウェブシステム'),('アーキテクティング'),('セキュリティ'),('AI/データサイエンス'),('UI/UX'),('ビジネススキル'),('その他');
@@ -108,14 +113,57 @@ INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_opt
 INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (3, 'What is the largest desert in the world?', 'Sahara', 'Gobi', 'Antarctica', 'The Sahara is the largest hot desert, but Antarctica is the largest desert overall.', TRUE, 1, 3, 3);
 
 
--- グラフ表示用 テストデータ
+
 INSERT INTO learning_records (date, is_solved, user_id, question_id) VALUES
 ('2024-11-20 12:00:00', TRUE, 1, 1),
 ('2024-11-21 14:30:00', FALSE, 1, 2),
 ('2024-11-22 09:15:00', TRUE, 2, 3),
 ('2024-11-25 16:45:00', TRUE, 2, 1),
 ('2024-11-26 11:00:00', FALSE, 3, 2),
-('2024-11-26 13:30:00', TRUE, 3, 3);
+('2024-11-26 13:30:00', TRUE, 3, 3),
+
+-- user4 のデータ（2週間 * 2）
+('2024-11-01 13:30:00', TRUE, 4, 1),
+('2024-11-02 13:30:00', TRUE, 4, 2),
+('2024-11-03 13:30:00', TRUE, 4, 3),
+('2024-11-04 13:30:00', TRUE, 4, 1),
+('2024-11-05 13:30:00', TRUE, 4, 2),
+('2024-11-06 13:30:00', TRUE, 4, 3),
+('2024-11-07 13:30:00', TRUE, 4, 1),
+('2024-11-08 13:30:00', TRUE, 4, 2),
+('2024-11-09 13:30:00', TRUE, 4, 3),
+('2024-11-10 13:30:00', TRUE, 4, 1),
+('2024-11-11 13:30:00', TRUE, 4, 2),
+('2024-11-12 13:30:00', FALSE, 4, 3),
+('2024-11-13 13:30:00', FALSE, 4, 1),
+('2024-11-14 13:30:00', FALSE, 4, 2),
+('2024-11-14 14:30:00', FALSE, 4, 3),
+('2024-11-14 15:30:00', FALSE, 4, 1),
+('2024-11-14 16:30:00', FALSE, 4, 2),
+('2024-11-14 17:30:00', FALSE, 4, 3),
+('2024-11-14 18:30:00', FALSE, 4, 3),
+('2024-11-14 19:30:00', FALSE, 4, 3),
+('2024-11-14 20:30:00', FALSE, 4, 3),
+('2024-11-15 13:30:00', TRUE, 4, 1),
+('2024-11-16 13:30:00', TRUE, 4, 2),
+('2024-11-17 13:30:00', TRUE, 4, 3),
+('2024-11-18 13:30:00', TRUE, 4, 1),
+('2024-11-19 13:30:00', TRUE, 4, 2),
+('2024-11-20 13:30:00', TRUE, 4, 3),
+('2024-11-21 13:30:00', TRUE, 4, 1),
+('2024-11-22 13:30:00', TRUE, 4, 2),
+('2024-11-23 13:30:00', TRUE, 4, 3),
+('2024-11-24 13:30:00', TRUE, 4, 1),
+('2024-11-25 13:30:00', TRUE, 4, 2),
+('2024-11-26 13:30:00', TRUE, 4, 3),
+('2024-11-27 13:30:00', TRUE, 4, 1),
+('2024-11-28 13:30:00', TRUE, 4, 2),
+('2024-11-28 14:30:00', TRUE, 4, 3),
+('2024-11-28 15:30:00', TRUE, 4, 1),
+('2024-11-28 16:30:00', FALSE, 4, 2),
+('2024-11-28 17:30:00', FALSE, 4, 3),
+('2024-11-28 18:30:00', FALSE, 4, 1),
+('2024-11-28 20:30:00', FALSE, 4, 2);
 
 
 -- 疎通確認用
