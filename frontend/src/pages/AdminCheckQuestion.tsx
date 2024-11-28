@@ -113,6 +113,7 @@ export const AdminCheckQuestion: React.FC = () => {
     const feedbackQuiz: PostFeedback = {
       id: quiz.id,
       step: quiz.step,
+      difficulty: quiz.difficulty,
       category_name: quiz.category_name,
       question: quiz.question,
       // question_image: string,
@@ -123,12 +124,11 @@ export const AdminCheckQuestion: React.FC = () => {
       // explanation_image: quiz.explanation_image,
       comment: quiz.comment,
       is_accept: quiz.is_accept,
-      difficulty: quiz.difficulty,
     };
     const postFeedbackQuestion = async (feedback: PostFeedback) => {
       try {
         await axios.put(
-          `http://localhost:5000/rarecheck/admin/question/${questionId}/edit`,
+          `http://localhost:5000/rarecheck/admin/question/${questionId}`,
           feedback, // POSTのボディ（送信するデータ）
           {
             headers: { "Content-Type": "application/json" },
@@ -153,7 +153,7 @@ export const AdminCheckQuestion: React.FC = () => {
           <h3>問題を確認する</h3>
         </div>
         <div className="questionStatus">
-          <>問題ID: {questionId}</>
+          <>問題ID: {quiz.id}</>
           <p>難易度: {getDifficultyLabel(quiz.difficulty)}</p>
           <p>問題掲載: {quiz.is_accept ? "承認" : "未承認"}</p>
         </div>
