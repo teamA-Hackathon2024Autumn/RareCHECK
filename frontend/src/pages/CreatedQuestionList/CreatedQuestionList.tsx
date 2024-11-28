@@ -10,11 +10,11 @@ export const CreatedQuestionList: React.FC = () => {
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("rarecheck-username");
-    // const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
-    // if (storedUserIsAdmin === "true") {
-    //   navigate("/admin-home");
-    // }
+    if (storedUserIsAdmin === "true") {
+      navigate("/admin-home");
+    }
     if (storedUserName === null) {
       navigate("/login");
     }

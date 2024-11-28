@@ -28,11 +28,11 @@ export const EditQuestion: React.FC = () => {
   useEffect(() => {
     // ローカルストレージからユーザー名と管理者権限を取得、ログイン状態を確認
     const storedUserName = localStorage.getItem("rarecheck-username");
-    // const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
-    // if (storedUserIsAdmin === "true") {
-    //     navigate("/admin-home");
-    //   }
+    if (storedUserIsAdmin === "true") {
+      navigate("/admin-home");
+    }
     if (storedUserName === null) {
       navigate("/login");
     }
