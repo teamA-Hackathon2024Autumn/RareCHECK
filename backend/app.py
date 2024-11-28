@@ -186,6 +186,8 @@ def admin_get_question(id):
         
         return jsonify({
             'id': question.id,
+            'difficulty': question.difficulty,
+            'is_accept': question.is_accept,
             'step': question.step,
             'category_name': question.category.category_name,
             'question': question.question,
@@ -216,6 +218,7 @@ def admin_get_question(id):
         question.wrong_option_2 = data.get('wrong_option_2', question.wrong_option_2)
         question.explanation = data.get('explanation', question.explanation)
         # question.explanation_image = data.get('explanation_image', question.explanation_image) S3に保存する
+        question.difficulty = data.get('difficulty', question.difficulty)
         question.comment = data.get('comment', question.comment)
         if question.comment != None:
             question.has_comment = True
@@ -328,6 +331,8 @@ def get_question(id):
 
         return jsonify({
             'id': question.id,
+            'difficulty': question.difficulty,
+            'is_accept': question.is_accept,
             'step': question.step,
             'category_name': category_name,
             'question': question.question,
