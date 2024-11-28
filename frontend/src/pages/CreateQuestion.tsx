@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -18,39 +18,40 @@ import styles from "./CreateQuestion.module.css";
 import { PostCreate } from "../types/api/PostCreate";
 
 export const CreateQuestion: React.FC = () => {
-
   const navigate = useNavigate();
   const storedUserId = localStorage.getItem("rarecheck-userId");
-  
- // ログイン状態の確認
+
+  // ログイン状態の確認
   useEffect(() => {
     // ローカルストレージからユーザー名と管理者権限を取得、ログイン状態を確認
     const storedUserName = localStorage.getItem("rarecheck-username");
     const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
     if (storedUserIsAdmin === "true") {
-        navigate("/admin-home");
-      }
+      navigate("/admin-home");
+    }
     if (storedUserName === null) {
       navigate("/login");
     }
   }, [navigate]);
 
-
   const defaultQuiz = {
-    step:"",
-    question:"",
+    step: "",
+    question: "",
     // question_image:string,
-    correct_option:"",
-    wrong_option_1:"",
-    wrong_option_2:"",
-    explanation:"",
+    correct_option: "",
+    wrong_option_1: "",
+    wrong_option_2: "",
+    explanation: "",
     // explanation_image:string,
-    user_id:storedUserId,
-    category_name:"",
+    user_id: storedUserId,
+    category_name: "",
   };
   /*1~500までの配列*/
-  const steps = Array.from({ length: 500 }, (_, i) => (i + 1).toString());
+  // const steps = Array.from({ length: 500 }, (_, i) => (i + 1).toString());
+
+  /*0~500までの配列 */
+  const steps = Array.from({ length: 501 }, (_, i) => i);
 
   const categories = [
     "インフラ",
@@ -79,51 +80,50 @@ export const CreateQuestion: React.FC = () => {
   };
 
   // 問題の入力
-  const handleQuestion = (e:any) => {
+  const handleQuestion = (e: any) => {
     const newQuestion = { ...quiz, question: e.target.value };
     setQuiz(newQuestion);
-  }
+  };
   // 解説の入力
-  const handleExplanation = (e:any) => {
+  const handleExplanation = (e: any) => {
     const newExplanation = { ...quiz, explanation: e.target.value };
     setQuiz(newExplanation);
-  }
+  };
   // 選択肢の入力
-  const handleCorrectOption = (e:any) => {
+  const handleCorrectOption = (e: any) => {
     const newCorrectOption = { ...quiz, correct_option: e.target.value };
     setQuiz(newCorrectOption);
-  }
-  const handleWrongOption1 = (e:any) => {
+  };
+  const handleWrongOption1 = (e: any) => {
     const newWrongOption1 = { ...quiz, wrong_option_1: e.target.value };
     setQuiz(newWrongOption1);
-  }
-  const handleWrongOption2 = (e:any) => {
+  };
+  const handleWrongOption2 = (e: any) => {
     const newWrongOption2 = { ...quiz, wrong_option_2: e.target.value };
     setQuiz(newWrongOption2);
-  }
-
+  };
 
   // 保存ボタンクリック後、stateの情報をAPIに送信、作成済み問題一覧へ遷移
   const handleCreateQuestion = () => {
-    const postCreateQuestion = async (quiz:PostCreate) => {
-    try {
-      await axios.post(
-      `http://localhost:5000/rarecheck/questions/create`, 
-      quiz, // POSTのボディ（送信するデータ）
-      {headers: {'Content-Type': 'application/json'},
-        withCredentials: true, // セッション管理に必要
+    const postCreateQuestion = async (quiz: PostCreate) => {
+      try {
+        await axios.post(
+          `http://localhost:5000/rarecheck/questions/create`,
+          quiz, // POSTのボディ（送信するデータ）
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true, // セッション管理に必要
+          },
+        );
+        console.log("post completed!");
+      } catch (error) {
+        console.error("Error saving result:", error);
       }
-    );
-    console.log("post completed!");
-    } catch (error) {
-    console.error("Error saving result:", error);
-    }
     };
     postCreateQuestion(quiz);
 
-    navigate("/createdquestionlist")
-  }
-  
+    navigate("/createdquestionlist");
+  };
 
   return (
     <Page login={true}>
@@ -136,7 +136,7 @@ export const CreateQuestion: React.FC = () => {
               <div className={styles.selectformLayout}>
                 <FormControl fullWidth>
                   <InputLabel id="step-select-label">
-                    ステップ（１つ選択）
+                    ステップ（該当なしは０を選択）
                   </InputLabel>
                   <Select
                     labelId="step-select-label"
@@ -199,16 +199,28 @@ export const CreateQuestion: React.FC = () => {
               </div>
               {/* 選択肢 */}
               <Stack spacing={2}>
-                <TextField label="正解の選択肢" variant="outlined" onChange={handleCorrectOption}/>
-                <TextField label="不正解の選択肢１" variant="outlined" onChange={handleWrongOption1}/>
-                <TextField label="不正解の選択肢２" variant="outlined" onChange={handleWrongOption2}/>
+                <TextField
+                  label="正解の選択肢"
+                  variant="outlined"
+                  onChange={handleCorrectOption}
+                />
+                <TextField
+                  label="不正解の選択肢１"
+                  variant="outlined"
+                  onChange={handleWrongOption1}
+                />
+                <TextField
+                  label="不正解の選択肢２"
+                  variant="outlined"
+                  onChange={handleWrongOption2}
+                />
               </Stack>
               {/* 解説 */}
               <div>
                 <TextField
                   sx={{ width: "100%" }}
                   id="outlined-multiline-static"
-                  label="問題"
+                  label="解説"
                   multiline
                   rows={4}
                   value={quiz.explanation}

@@ -38,20 +38,20 @@ export const Exercise: React.FC = () => {
     const fetchQuestions = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:5000/rarecheck/questions',
+          "http://localhost:5000/rarecheck/questions",
           requestPayload,
           {
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             withCredentials: true,
-          }
+          },
         );
 
-        console.log('Fetched questions:', response.data);
+        console.log("Fetched questions:", response.data);
         setQuestions(response.data);
       } catch (error) {
-        console.error('Error fetching questions:', error);
+        console.error("Error fetching questions:", error);
       }
     };
 
@@ -91,9 +91,9 @@ export const Exercise: React.FC = () => {
           `http://localhost:5000/rarecheck/questions/${questions[currentQuestionIndex].id}/answer`,
           result,
           {
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
             withCredentials: true,
-          }
+          },
         );
         console.log("post completed!");
       } catch (error) {
@@ -163,11 +163,13 @@ export const Exercise: React.FC = () => {
                 <div className={styles.correctAndWrongLayoutContainer}>
                   <p className={styles.corectAndWrongLayout}>
                     <span className={styles.maruBatsuStyle}>
-                      {selectedOption === questions[currentQuestionIndex].correct_option
+                      {selectedOption ===
+                      questions[currentQuestionIndex].correct_option
                         ? "◯ "
                         : "✕ "}
                     </span>
-                    {selectedOption === questions[currentQuestionIndex].correct_option
+                    {selectedOption ===
+                    questions[currentQuestionIndex].correct_option
                       ? "正解！"
                       : "不正解！"}
                   </p>
@@ -176,7 +178,7 @@ export const Exercise: React.FC = () => {
                   正解:{" "}
                   {getLabelForOption(
                     questions[currentQuestionIndex].options.indexOf(
-                      questions[currentQuestionIndex].correct_option
+                      questions[currentQuestionIndex].correct_option,
                     ),
                   )}
                 </p>

@@ -22,7 +22,10 @@ import { questionCounts } from "./selections/questionCounts";
 import { difficultyLevels } from "./selections/difficultyLevels";
 
 // 関数を別のファイルからインポート
-import { convertStepRangeToList, convertDifficultyToNumber } from "../../services/convertFunctions";
+import {
+  convertStepRangeToList,
+  convertDifficultyToNumber,
+} from "../../services/convertFunctions";
 
 export const QuestionSelection = () => {
   const navigate = useNavigate();
@@ -84,15 +87,17 @@ export const QuestionSelection = () => {
 
   const OnClickStartExercise = () => {
     // ステップ範囲の変換
-    const stepRanges = filter.step_ranges.map((range) => convertStepRangeToList(range));
+    const stepRanges = filter.step_ranges.map((range) =>
+      convertStepRangeToList(range),
+    );
 
     // 難易度の変換
     const difficultyNumbers = filter.difficulty.map(convertDifficultyToNumber);
 
     // 問題数の変換
-    let questionCount:number|string = filter.question_count;
+    let questionCount: number | string = filter.question_count;
     if (questionCount === "全") {
-      questionCount = 9999; 
+      questionCount = 9999;
     } else {
       questionCount = parseInt(questionCount, 10);
     }
@@ -129,7 +134,9 @@ export const QuestionSelection = () => {
               >
                 {stepGroups.map((stepGroup) => (
                   <MenuItem key={stepGroup} value={stepGroup}>
-                    <Checkbox checked={filter.step_ranges.includes(stepGroup)} />
+                    <Checkbox
+                      checked={filter.step_ranges.includes(stepGroup)}
+                    />
                     <ListItemText primary={stepGroup} />
                   </MenuItem>
                 ))}
@@ -187,7 +194,9 @@ export const QuestionSelection = () => {
                   control={
                     <Checkbox
                       value={questionCount.toString()}
-                      checked={filter.question_count === questionCount.toString()}
+                      checked={
+                        filter.question_count === questionCount.toString()
+                      }
                       onChange={handleQuestionCount}
                     />
                   }

@@ -1,7 +1,6 @@
-// 問題編集（受講生）
-
-export type GetQuestionDetail = {
-  step: number;
+// 編集してPostする問題（管理者）
+export type PostFeedback = {
+  step: number | string;
   question: string;
   // question_image:string,
   correct_option: string;
@@ -10,8 +9,8 @@ export type GetQuestionDetail = {
   explanation: string;
   // explanation_image:string,
   is_accept: boolean;
-  difficulty: string;
+  difficulty: number | string;
   comment: string;
-  has_comment: boolean;
+  id: number | string;
   category_name: string;
 };

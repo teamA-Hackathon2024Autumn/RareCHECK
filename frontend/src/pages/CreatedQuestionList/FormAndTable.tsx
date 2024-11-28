@@ -72,8 +72,18 @@ const headCells: readonly HeadCell[] = [
   { id: "id", numeric: true, disablePadding: true, label: "問題ID" },
   { id: "question", numeric: false, disablePadding: false, label: "問題本文" },
   { id: "step", numeric: true, disablePadding: false, label: "ステップ" },
-  { id: "category_name", numeric: false, disablePadding: false, label: "カテゴリ" },
-  { id: "created_at", numeric: false, disablePadding: false, label: "作成年月日" },
+  {
+    id: "category_name",
+    numeric: false,
+    disablePadding: false,
+    label: "カテゴリ",
+  },
+  {
+    id: "created_at",
+    numeric: false,
+    disablePadding: false,
+    label: "作成年月日",
+  },
   {
     id: "has_comment",
     numeric: false,
@@ -185,7 +195,7 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
   }, [order, orderBy, page, rowsPerPage, searchQuery]);
 
   const handleButtonClick = (row: CreatedQuestionData) => {
-    navigate('/editquestion', { state: { id: row.id } });
+    navigate("/editquestion", { state: { id: row.id } });
   };
 
   return (

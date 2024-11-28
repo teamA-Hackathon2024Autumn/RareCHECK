@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,6 +13,8 @@ import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
+
+import { GetQuestionListAdmin } from "../../types/api/GetQuestionListAdmin";
 
 // 数値と文字列を扱える降順比較関数
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
@@ -71,7 +74,7 @@ const headCells: readonly HeadCell[] = [
     label: "ステップ",
   },
   {
-    id: "category",
+    id: "category_name",
     numeric: false,
     disablePadding: false,
     label: "カテゴリ",
@@ -130,23 +133,25 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 // 問題のオブジェクトの型定義
 export type Data = {
-  id: number;
+  id: number | string;
   question: string;
   username: string;
   step: number | string;
-  category: string;
+  category_name: string;
   btn?: string;
 };
 
 // propsの型定義
 type QuestionAwaitingCheckProps = {
-  rows: Data[];
+  rows: GetQuestionListAdmin[];
 };
 
 // 検索フォームと表の関数コンポーネント
 export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
   rows,
 }) => {
+  const navigate = useNavigate();
+
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [page, setPage] = React.useState(0);
@@ -185,15 +190,15 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
           row.id.toString().includes(searchQuery.toLowerCase()) ||
           row.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          row.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          row.category_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           row.step.toString().includes(searchQuery.toLowerCase()),
       )
       .sort(getComparator(order, orderBy))
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   }, [order, orderBy, page, rowsPerPage, searchQuery]);
 
-  const handleButtonClick = (row: Data) => {
-    alert(`確認ボタンが押されました: 問題ID ${row.id}`);
+  const handleButtonClick = (row: GetQuestionListAdmin) => {
+    navigate("/admincheckquestion", { state: { id: row.id } });
   };
 
   return (
@@ -242,7 +247,7 @@ export const FormAndTable: React.FC<QuestionAwaitingCheckProps> = ({
                     {row.step}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
-                    {row.category}
+                    {row.category_name}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
                     <Button

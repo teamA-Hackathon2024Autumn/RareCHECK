@@ -94,7 +94,7 @@ export const questions: Question[] = [
     questionimage: "",
     explanationimage: "",
     category: "ネットワーク",
-    step:"",
+    step: "",
     difficulty: "普通",
   },
   {
@@ -192,7 +192,7 @@ export const questions: Question[] = [
     questionimage: "",
     explanationimage: "",
     category: "ネットワーク",
-    step:"",
+    step: "",
     difficulty: "易しい",
   },
   {
