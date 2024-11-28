@@ -1,27 +1,53 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Page } from "../components/layout/Page";
-import { QuestionButton } from "../components/common/QuestionButton";
+import {
+  ExerciseAnalysis,
+  ExerciseAnalysisData,
+} from "../components/ExerciseAnalysis";
+import { fetchExerciseAnalysisData } from "../services/api";
 import styles from "./Home.module.css";
+import { QuestionButtonArea } from "../components/QuestionButtonArea";
 
 export const Home = () => {
   const [userName, setUserName] = useState<string | null>("");
+  const [exerciseAnalysisData, setExerciseAnalysisData] =
+    useState<ExerciseAnalysisData | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // ローカルストレージからユーザー名を取得
-    const storedUserName = localStorage.getItem("rarecheck-username");
-    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
+    const fetchData = async () => {
+      // ローカルストレージからユーザー名を取得
+      const storedUserName = localStorage.getItem("rarecheck-username");
+      const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
-    if (storedUserName != "") {
-      setUserName(storedUserName);
-      if (storedUserIsAdmin === "true") {
-        navigate("/admin-home");
+      if (storedUserName != "") {
+        setUserName(storedUserName);
+        if (storedUserIsAdmin === "true") {
+          navigate("/admin-home");
+          return;
+        }
       }
-    }
-    if (storedUserName === null) {
-      navigate("/login");
-    }
+      if (storedUserName === null) {
+        navigate("/login");
+        return;
+      }
+
+      const userId = localStorage.getItem("rarecheck-userId");
+      if (userId) {
+        const result = await fetchExerciseAnalysisData(userId);
+
+        if (result && "data" in result) {
+          if (result.status == 200) {
+            setExerciseAnalysisData(result.data);
+          }
+        } else {
+          setExerciseAnalysisData(null);
+        }
+      }
+    };
+
+    fetchData();
   }, [navigate]);
 
   return (
@@ -43,7 +69,7 @@ export const Home = () => {
             gridRow: "1 / 7",
           }}
         >
-          ランキング関係
+          ランキング
         </div>
         <div
           className={styles.dashboardItem}
@@ -55,13 +81,13 @@ export const Home = () => {
           お知らせ
         </div>
         <div
-          className={styles.dashboardItem}
+          className={`${styles.dashboardItem} ${styles.exerciseAnalysisLayout}`}
           style={{
             gridColumn: "2 / 2",
             gridRow: "7 / 13",
           }}
         >
-          学習状況
+          <ExerciseAnalysis exerciseAnalysisData={exerciseAnalysisData} />
         </div>
         <div
           className={`${styles.dashboardItem} ${styles.questionsLayout}`}
@@ -70,18 +96,7 @@ export const Home = () => {
             gridRow: "7 / 13",
           }}
         >
-          <QuestionButton variant="contained" size="large">
-            問題演習
-          </QuestionButton>
-          <QuestionButton variant="contained" size="large">
-            問題作成
-          </QuestionButton>
-          <QuestionButton variant="outlined" size="large">
-            問題一覧
-          </QuestionButton>
-          <QuestionButton variant="outlined" size="large">
-            作成した問題一覧
-          </QuestionButton>
+          <QuestionButtonArea />
         </div>
       </div>
     </Page>

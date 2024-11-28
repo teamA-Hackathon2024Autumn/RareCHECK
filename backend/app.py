@@ -520,15 +520,15 @@ def get_record(user_id):
 
         records = {
             "first_two_week": {
-                "start_date": two_weeks_ago.strftime('%Y-%m-%d'),
-                "end_date": today.strftime('%Y-%m-%d'),
+                "start_date": two_weeks_ago.strftime('%Y/%m/%d'),
+                "end_date": today.strftime('%Y/%m/%d'),
                 "total_questions": total_correct_first,
                 "total_correct": total_correct_first,
                 "correct_percentage": round(correct_percentage_first, 2)
             },
             "second_two_week": {
-                "start_date": four_weeks_ago.strftime('%Y-%m-%d'),
-                "end_date": two_weeks_ago.strftime('%Y-%m-%d'),
+                "start_date": four_weeks_ago.strftime('%Y/%m/%d'),
+                "end_date": two_weeks_ago.strftime('%Y/%m/%d'),
                 "total_questions": total_questions_second,
                 "total_correct": total_correct_second,
                 "correct_percentage": round(correct_percentage_second, 2)
