@@ -99,7 +99,7 @@ INSERT INTO categories (category_name) VALUES ('インフラ'),('プログラミ
 -- 問題一覧取得用のquestionsのテストデータ
 -- user_id 1の人のデータ
 INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (1, 'What is the capital of France?', 'Paris', 'London', 'Berlin', 'Paris is the capital city of France.', TRUE, 1, 1, 1);
-INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (2, 'What is 2 + 2?', '4', '3', '5', '2 + 2 equals 4.', TRUE, 1, 1, 2);
+INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (2, 'What is 2 + 2?', '4', '3', '5', '2 + 2 equals 4.', FALSE, 1, 1, 2);
 INSERT INTO questions (step, question, correct_option, wrong_option_1, wrong_option_2, explanation, is_accept, difficulty, user_id, category_id) VALUES (3, 'Which is the largest planet in our Solar System?', 'Jupiter', 'Earth', 'Mars', 'Jupiter is the largest planet.', TRUE, 2, 1, 3);
 
 -- user_id 2の人のデータ
