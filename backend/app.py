@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import uuid
 import traceback
 import random
+import pytz
 
 
 app = Flask(__name__)
@@ -470,6 +471,7 @@ def get_answer(id):
         return jsonify({'message': 'Answer is recorded successfully'}), 200
     except Exception as e:
         db.session.rollback()
+        traceback.print_exc()
         return jsonify({'error': 'Failed to record answer'}), 500
     
 
@@ -477,8 +479,11 @@ def get_answer(id):
 @app.route('/rarecheck/users/<int:user_id>/exercise_analysis', methods=['GET'])
 def get_record(user_id):
     try:
-        today = datetime.now()
+        # today = datetime.now(pytz.timezone('Asia/Tokyo'))
 
+        japan_tz = pytz.timezone('Asia/Tokyo')
+
+        today = datetime.now(japan_tz)
         # 2週間前の日付を計算
         two_weeks_ago = today - timedelta(days=14)
         # 4週間前の日付を計算
@@ -527,7 +532,7 @@ def get_record(user_id):
             "first_two_week": {
                 "start_date": two_weeks_ago.strftime('%Y/%m/%d'),
                 "end_date": today.strftime('%Y/%m/%d'),
-                "total_questions": total_correct_first,
+                "total_questions": total_questions_first,
                 "total_correct": total_correct_first,
                 "correct_percentage": round(correct_percentage_first, 2)
             },

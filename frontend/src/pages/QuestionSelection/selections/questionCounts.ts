@@ -1,0 +1,1 @@
+export const questionCounts = [5, 10, 15, 20]; //全問は別で実装

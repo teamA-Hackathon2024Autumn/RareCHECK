@@ -3,7 +3,7 @@ import { Login } from "./pages/Login";
 import { SignUp } from "./pages/SignUp";
 import { UserInfo } from "./pages/UserInfo";
 import { AdminHome } from "./pages/AdminHome";
-import { QuestionSelection } from "./pages/QuestionSelection";
+import { QuestionSelection } from "./pages/QuestionSelection/QuestionSelection";
 import { Exercise } from "./pages/Exercise/Exercise";
 import { CreateQuestion } from "./pages/CreateQuestion";
 import { CreatedQuestionList } from "./pages/CreatedQuestionList/CreatedQuestionList";
@@ -12,6 +12,7 @@ import { AdminCheckQuestion } from "./pages/AdminCheckQuestion";
 import { AdminEditQuestion } from "./pages/AdminEditQuestion";
 import { QuestionsAwaitingCheck } from "./pages/QuestionsAwaitingCheck/QuestionsAwaitingCheck";
 import { AdminQuestionList } from "./pages/AdminQuestionList/AdminQuestionList";
+import { Page404 } from "./pages/Page404";
 import { ApiCheck } from "./components/common/ApiCheck";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -37,6 +38,7 @@ export const App = () => {
         />
         <Route path="/AdminQuestionList" element={<AdminQuestionList />} />
         <Route path="/test" element={<ApiCheck />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </BrowserRouter>
   );

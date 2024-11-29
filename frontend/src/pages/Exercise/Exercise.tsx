@@ -1,83 +1,106 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Box, Button } from "@mui/material";
 
 import styles from "./Exercise.module.css";
 import { Page } from "../../components/layout/Page";
 import { Result } from "./Result";
-import { questions } from "./SampleQuestions";
+import { PostResult } from "../../types/api/PostResult";
+import { GetExercise } from "../../types/api/GetExercise";
+import { AllExerciseResult } from "../../types/AllExerciseResult";
 
 export const Exercise: React.FC = () => {
- 
-  type Result = {
-    question: string;
-    selectedOption: string;
-    correctAnswer: string;
-    id: number;
-    isCorrect: boolean;
-    category: string;
-    difficulty: string;
-    step: string | number;
-  };
+  const navigate = useNavigate();
+  const storedUserId = localStorage.getItem("rarecheck-userId");
+  const location = useLocation();
+  const requestPayload = location.state;
+  console.log("Received Payload:", requestPayload);
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); //問題の配列を順番に取り出すためのステート
-  const [selectedOption, setSelectedOption] = useState<string | null>(null); //回答した選択肢を保持するステート
-  const [isAnswered, setIsAnswered] = useState(false); //回答済みの問題かどうかを保持するステート
-  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]); //選択肢の配列の中身をランダムに入れ替えたあとの状態を保持するステート
-  const [result, setResult] = useState<Result>(); //１問ごとに回答の結果を格納し、APIで送信するためのステート
-  const [allResults, setAllResults] = useState<Result[]>([]);
+  const [questions, setQuestions] = useState<GetExercise[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [allResults, setAllResults] = useState<AllExerciseResult[]>([]);
   const [isQuizComplete, setIsQuizComplete] = useState<boolean>(false);
 
-  /*resultに格納するプロパティ
-問題id,isCorrrect,datetime
-*/
-
-  /*allResultsに格納するオブジェクトの配列
-問題id,isCorrect
-*/
-
   useEffect(() => {
-    // 選択肢をランダムにシャッフル
-    const newOptions = shuffleArray(questions[currentQuestionIndex].options);
-    setShuffledOptions(newOptions);
-  }, [currentQuestionIndex]);
+    const storedUserName = localStorage.getItem("rarecheck-username");
+    const storedUserIsAdmin = localStorage.getItem("rarecheck-isAdmin");
 
-  const shuffleArray = (array: string[]) => {
-    return array.sort(() => Math.random() - 0.5);
-  };
+    if (storedUserIsAdmin === "true") {
+      navigate("/admin-home");
+    }
+    if (storedUserName === null) {
+      navigate("/login");
+    }
 
-  //選んだ選択肢がanswerと一致するか（boolean）をisCorrectに格納
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/rarecheck/questions",
+          requestPayload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          },
+        );
+
+        console.log("Fetched questions:", response.data);
+        setQuestions(response.data);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      }
+    };
+
+    fetchQuestions();
+  }, [requestPayload, navigate]);
+
   const handleClick = async (option: string) => {
-    const isCorrect = option === questions[currentQuestionIndex].answer;
+    if (questions.length === 0) return; // `questions`が空の場合は処理を中止
+
+    const isCorrect = option === questions[currentQuestionIndex].correct_option;
     setSelectedOption(option);
     setIsAnswered(true);
 
-    // 結果を保存
-    const newResult = {
+    const newAllResult = {
       question: questions[currentQuestionIndex].question,
       selectedOption: option,
-      correctAnswer: questions[currentQuestionIndex].answer,
+      correctAnswer: questions[currentQuestionIndex].correct_option,
       id: questions[currentQuestionIndex].id,
       isCorrect: isCorrect,
-      category: questions[currentQuestionIndex].category,
+      category: questions[currentQuestionIndex].category_name,
       difficulty: questions[currentQuestionIndex].difficulty,
       step: questions[currentQuestionIndex].step,
     };
 
-    const newAllResults = [...allResults, newResult];
+    const newAllResults = [...allResults, newAllResult];
     setAllResults(newAllResults);
-    setResult(newResult);
 
-    // 結果をAPIに保存
-    const postResult = async () => {
+    const newResult = {
+      user_id: storedUserId,
+      question_id: questions[currentQuestionIndex].id,
+      is_solved: isCorrect,
+    };
+
+    const postResult = async (result: PostResult) => {
       try {
-        await axios.post("http://localhost:5000/submit", { result });
+        await axios.post(
+          `http://localhost:5000/rarecheck/questions/${questions[currentQuestionIndex].id}/answer`,
+          result,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          },
+        );
         console.log("post completed!");
       } catch (error) {
         console.error("Error saving result:", error);
       }
     };
-    postResult();
+    postResult(newResult);
   };
 
   const handleNextQuestion = () => {
@@ -91,15 +114,20 @@ export const Exercise: React.FC = () => {
     }
   };
 
-  // const isQuizComplete = currentQuestionIndex == questions.length;
   const handleResult = () => {
-    allResults.length === questions.length && setIsQuizComplete(true);
+    if (allResults.length === questions.length) {
+      setIsQuizComplete(true);
+    }
   };
 
-  // A, B, Cのラベルを選択肢に関連付け
   const getLabelForOption = (index: number) => {
     return String.fromCharCode(65 + index); // 0 => "A", 1 => "B", 2 => "C"
   };
+
+  // `questions`が空でないことを確認する条件付きレンダリング
+  if (questions.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Page login={true}>
@@ -112,12 +140,8 @@ export const Exercise: React.FC = () => {
             <p className={styles.questionBox}>
               {questions[currentQuestionIndex].question}
             </p>
-            <img
-              src={questions[currentQuestionIndex].explanationimage}
-              alt=""
-            />
             <div className={styles.buttonGroup}>
-              {shuffledOptions.map((option, index) => (
+              {questions[currentQuestionIndex].options.map((option, index) => (
                 <div key={option}>
                   <Button
                     variant="contained"
@@ -127,8 +151,7 @@ export const Exercise: React.FC = () => {
                     onClick={() => handleClick(option)}
                     disabled={isAnswered}
                   >
-                    {getLabelForOption(index)} {/* A, B, C のラベル */}
-                    {/* {String.fromCharCode(65 + index)} A, B, C のラベル */}
+                    {getLabelForOption(index)}
                   </Button>
                   <span> {option}</span>
                 </div>
@@ -137,15 +160,16 @@ export const Exercise: React.FC = () => {
 
             {isAnswered && (
               <div>
-                {/* <div className={styles.corectAndWrongLayout}> */}
                 <div className={styles.correctAndWrongLayoutContainer}>
                   <p className={styles.corectAndWrongLayout}>
                     <span className={styles.maruBatsuStyle}>
-                      {selectedOption === questions[currentQuestionIndex].answer
+                      {selectedOption ===
+                      questions[currentQuestionIndex].correct_option
                         ? "◯ "
                         : "✕ "}
                     </span>
-                    {selectedOption === questions[currentQuestionIndex].answer
+                    {selectedOption ===
+                    questions[currentQuestionIndex].correct_option
                       ? "正解！"
                       : "不正解！"}
                   </p>
@@ -153,17 +177,13 @@ export const Exercise: React.FC = () => {
                 <p>
                   正解:{" "}
                   {getLabelForOption(
-                    shuffledOptions.indexOf(
-                      questions[currentQuestionIndex].answer,
+                    questions[currentQuestionIndex].options.indexOf(
+                      questions[currentQuestionIndex].correct_option,
                     ),
                   )}
                 </p>
                 <p>解説：</p>
                 <p>{questions[currentQuestionIndex].explanation}</p>
-                <img
-                  src={questions[currentQuestionIndex].questionimage}
-                  alt=""
-                />
                 {allResults.length !== questions.length ? (
                   <Box className="nextButton " textAlign="center" py={3}>
                     <Button
@@ -206,6 +226,7 @@ export const Exercise: React.FC = () => {
               <Result allResultsRows={allResults} />
               <Box className="saveButton " textAlign="center" py={3}>
                 <Button
+                  onClick={() => navigate("/")}
                   variant="contained"
                   size="large"
                   sx={{

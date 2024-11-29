@@ -67,7 +67,7 @@ export const ExerciseAnalysis = ({
         xAxis={[
           {
             scaleType: "band",
-            data: [first_two_week, second_tow_week],
+            data: [second_tow_week, first_two_week],
           },
         ]}
         yAxis={[
@@ -87,22 +87,22 @@ export const ExerciseAnalysis = ({
         series={[
           {
             data: [
-              exerciseAnalysisData?.first_two_week.total_questions ?? 0,
               exerciseAnalysisData?.second_two_week.total_questions ?? 0,
+              exerciseAnalysisData?.first_two_week.total_questions ?? 0,
             ],
             label: "演習数",
           },
           {
             data: [
-              exerciseAnalysisData?.first_two_week.total_correct ?? 0,
               exerciseAnalysisData?.second_two_week.total_correct ?? 0,
+              exerciseAnalysisData?.first_two_week.total_correct ?? 0,
             ],
             label: "正答数",
           },
           {
             data: [
-              exerciseAnalysisData?.first_two_week.correct_percentage ?? 0,
               exerciseAnalysisData?.second_two_week.correct_percentage ?? 0,
+              exerciseAnalysisData?.first_two_week.correct_percentage ?? 0,
             ],
             label: "正答率",
             yAxisKey: "right-axis",
