@@ -230,6 +230,8 @@ def admin_get_question(id):
             question.has_comment = True
         if data.get('is_accept') is True and question.is_accept == False:
             question.is_accept = data.get('is_accept', question.is_accept)
+        elif data.get('is_accept') is False and question.is_accept == True:
+            question.is_accept = data.get('is_accept', question.is_accept)
         db.session.commit()
 
         return jsonify({'message': 'Question updated Successfully'}), 200
