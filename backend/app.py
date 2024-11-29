@@ -9,6 +9,7 @@ import uuid
 import traceback
 import random
 import pytz
+import bcrypt
 
 
 app = Flask(__name__)
@@ -42,10 +43,11 @@ def login():
             return jsonify({'message': 'Email and password are required'}), 400
         
         # ユーザーをデータベースから検索
-        user = User.query.filter_by(email=email, password=password).first()
-        if user is None:
-            print(f"Debug: No user found with email={email} and password={password}")
-            return jsonify({'message': 'email, password not found'}), 400
+        user = User.query.filter_by(email=email).first()  # パスワードではなく、メールで検索
+
+        if user is None or not bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            print(f"Debug: Invalid login for email={email}")
+            return jsonify({'message': 'Invalid email or password'}), 400
         
         if user:
             # セッションIDを生成
@@ -108,12 +110,15 @@ def register():
             return jsonify({'message': 'ユーザー名がすでに利用されています'}), 400
         if User.query.filter_by(email=email).first():
             return jsonify({'message': 'メールアドレスがすでに利用されています'}), 400
+        
+        # パスワードをハッシュ化
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         # 新しいユーザーをデータベースに追加
         new_user = User(
             username=username,
             email=email,
-            password=password,  #TODO: パスワードのハッシュ化
+            password=hashed_password.decode('utf-8'),  # ハッシュを文字列として保存
             is_admin=False  # 新規登録時はデフォルトで管理者ではない
         )
         db.session.add(new_user)

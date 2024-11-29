@@ -66,14 +66,14 @@ CREATE TABLE learning_records (
 );
 
 -- usersのサンプルデータ（管理者）
-INSERT INTO users (username, email, password, is_admin) VALUES ('testuser1', 'test1@email.com', 'testtest1', TRUE);
-INSERT INTO users (username, email, password, is_admin) VALUES ('testuser2', 'test2@email.com', 'testtest2', TRUE);
-INSERT INTO users (username, email, password, is_admin) VALUES ('testuser3', 'test3@email.com', 'testtest3', TRUE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser1', 'test1@email.com', '$2b$12$gqRvHbLHZRHl4gcrQDlzjeX1hsZvBta8KZNdRROv5IbVWg/ecTZY2', TRUE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser2', 'test2@email.com', '$2b$12$ESE2cOq1mr7LwJGJ9cmYCOPgQ5DB4aSChhp3I89gokjLydtSg7I1S', TRUE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser3', 'test3@email.com', '$2b$12$7fdhuOk0oa8F5.GCtKjusOASyzrB5QxgKOFliZy4XIMbZUyHhBd7W', TRUE);
 
 -- userのサンプルデータ（一般ユーザー）
-INSERT INTO users (username, email, password, is_admin) VALUES ('testuser4', 'test4@email.com', 'testtest4', FALSE);
-INSERT INTO users (username, email, password, is_admin) VALUES ('testuser5', 'test5@email.com', 'testtest5', FALSE);
-INSERT INTO users (username, email, password, is_admin) VALUES ('testuser6', 'test6@email.com', 'testtest6', FALSE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser4', 'test4@email.com', '$2b$12$yigDJLzFFdcuVFYeUAO5C.gtT8IIRi2rvaIlgYTlifS62N8W0fLae', FALSE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser5', 'test5@email.com', '$2b$12$YVla/2mgWvvylZ7MKn6iPODmpX3WKMMMIASTX3ICbUmelp/WMlH0y', FALSE);
+INSERT INTO users (username, email, password, is_admin) VALUES ('testuser6', 'test6@email.com', '$2b$12$3Y99pREzC4b5De4RB2t7ne8ouvOKK8GMfRt5KWSyjfUy9EFE1l1yC', FALSE);
 
 -- categoriesのサンプルデータ
 INSERT INTO categories (category_name) VALUES ('インフラ'),('プログラミング'),('ウェブシステム'),('アーキテクティング'),('セキュリティ'),('AI/データサイエンス'),('UI/UX'),('ビジネススキル'),('その他');
