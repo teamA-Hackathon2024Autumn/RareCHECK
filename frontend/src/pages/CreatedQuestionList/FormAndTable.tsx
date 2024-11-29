@@ -153,6 +153,16 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = React.useState("");
 
+  //dateを変換
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 月は0始まりなので +1 する
+    const day = date.getDate().toString().padStart(2, "0");
+
+    return `${year}/${month}/${day}`;
+  }
+
   const handleRequestSort = (property: keyof CreatedQuestionData) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -242,7 +252,7 @@ export const FormAndTable: React.FC<CreatedQuestionProps> = ({ rows }) => {
                     {row.category_name}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
-                    {row.created_at}
+                    {formatDate(row.created_at)}
                   </TableCell>
                   <TableCell sx={{ border: "1px solid #ddd" }}>
                     {row.has_comment ? "あり" : "なし"}
