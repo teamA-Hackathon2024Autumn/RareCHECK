@@ -4,3 +4,4 @@ mysqlclient
 flask-cors
 Flask-Session
 pytz
+bcrypt
