@@ -372,6 +372,7 @@ def get_question(id):
         question.wrong_option_2 = data.get('wrong_option_2', question.wrong_option_2)
         question.explanation = data.get('explanation', question.explanation)
         # question.explanation_image = data.get('explanation_image', question.explanation_image) S3に保存する
+        question.has_comment = False
 
         db.session.commit()
 
