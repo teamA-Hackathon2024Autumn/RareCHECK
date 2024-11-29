@@ -92,7 +92,6 @@ export const AdminCheckQuestion: React.FC = () => {
     const newIsAccepted = { ...quiz, is_accept: reverseIsAccepted };
     console.log(reverseIsAccepted);
     setQuiz(newIsAccepted);
-    console.log(quiz);
   };
 
   const getDifficultyLabel = (difficulty: number | string): string => {
@@ -108,7 +107,7 @@ export const AdminCheckQuestion: React.FC = () => {
     }
   };
 
-  // fi
+  // 保存
   const handleSubmit = () => {
     const feedbackQuiz: PostFeedback = {
       id: quiz.id,

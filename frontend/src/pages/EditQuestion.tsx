@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import {
@@ -22,7 +22,6 @@ export const EditQuestion: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const questionId = location.state?.id;
-  // const storedUserId = localStorage.getItem("rarecheck-userId");
 
   // ログイン状態の確認
   useEffect(() => {

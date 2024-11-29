@@ -7,6 +7,8 @@ import { GetCreatedList } from "../../types/api/GetCreatedList";
 
 export const CreatedQuestionList: React.FC = () => {
   const navigate = useNavigate();
+  const [quiz, setQuiz] = useState<GetCreatedList[]>([]);
+  const [loading, setLoading] = useState(true); // ローディング状態の追加
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("rarecheck-username");
@@ -20,8 +22,6 @@ export const CreatedQuestionList: React.FC = () => {
     }
   }, [navigate]);
 
-  const [quiz, setQuiz] = useState<GetCreatedList[]>([]);
-
   useEffect(() => {
     const getQuiz = async () => {
       try {
@@ -33,11 +33,13 @@ export const CreatedQuestionList: React.FC = () => {
           },
         );
         setQuiz(res.data);
+        setLoading(false); // データ取得後にローディングを終了
       } catch (error) {
         console.error("Error fetching data:", error);
         if (axios.isAxiosError(error)) {
           console.error("Axios error:", error.response?.data);
         }
+        setLoading(false); // エラーが発生してもローディングを終了
       }
     };
     getQuiz();
@@ -45,8 +47,8 @@ export const CreatedQuestionList: React.FC = () => {
 
   return (
     <Page login={true}>
-      {quiz.length === 0 ? (
-        <p>データを読み込み中...</p> // データが空の場合の表示
+      {loading ? (
+        <div>loading...</div> // データが空の場合の表示
       ) : (
         <FormAndTable rows={quiz} />
       )}
