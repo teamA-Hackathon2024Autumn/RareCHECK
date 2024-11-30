@@ -143,6 +143,77 @@ def register():
         return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
 
 
+# ユーザー情報の取得
+@app.route('/rarecheck/users/<int:user_id>', methods=['GET'])
+def get_user_info(user_id):
+    try:
+        # セッションからユーザーIDを取得
+        session_user_id = session.get('user_id')
+        if session_user_id is None or session_user_id != user_id:
+            return jsonify({'message': 'Unauthorized: User ID does not match session'}), 403
+
+        # ユーザー情報をデータベースから取得
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+
+        # ユーザー名とメールアドレスをレスポンスとして返す
+        response_data = {
+            'username': user.username,
+            'email': user.email
+        }
+        return jsonify(response_data), 200
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'message': 'An unexpected error occurred', 'error': str(e)}), 500
+
+
+# ユーザー情報の更新
+@app.route('/rarecheck/users/<int:user_id>', methods=['PUT'])
+def update_user_info(user_id):
+    try:
+        # セッションからユーザーIDを取得
+        session_user_id = session.get('user_id')
+        if session_user_id is None or session_user_id != user_id:
+            return jsonify({'message': 'Unauthorized: User ID does not match session'}), 403
+
+        # リクエストデータの取得
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        before_password = data.get('beforePassword')
+        new_password = data.get('password')
+
+        if not all([username, email, before_password, new_password]):
+            return jsonify({'message': 'All fields are required'}), 400
+
+        # ユーザー情報をデータベースから取得
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+
+        # 現在のパスワードを検証
+        if not bcrypt.checkpw(before_password.encode('utf-8'), user.password.encode('utf-8')):
+            return jsonify({'message': 'The current password is incorrect'}), 400
+
+        # ユーザー情報を更新
+        user.username = username
+        user.email = email
+        user.password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+        db.session.commit()
+        return jsonify({
+            'message': 'User information updated successfully',
+            'username': user.username
+        }), 200  # 成功時にメッセージとユーザー名を返す
+
+    except Exception as e:
+        db.session.rollback()
+        traceback.print_exc()
+        return jsonify({'message': 'An unexpected error occurred', 'error': str(e)}), 500
+
+
 # 管理者(admin)
 # 問題一覧表示(承認・未承認含む全ての問題)
 @app.route('/rarecheck/admin/questions', methods=['GET'])
