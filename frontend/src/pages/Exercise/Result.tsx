@@ -11,7 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import styles from "./Result.module.css";
 
 type Column = {
-  id: "id" | "question" | "step" | "category" | "difficulty" | "isCorrected";
+  id: "id" | "question" | "step" | "category" | "difficulty" | "isCorrect";
   label: string;
   minWidth?: number;
   align?: "left" | "center";
@@ -39,7 +39,7 @@ const columns: readonly Column[] = [
     minWidth: 40,
   },
   {
-    id: "isCorrected",
+    id: "isCorrect",
     label: "正誤",
     align: "center",
     minWidth: 30,
@@ -115,7 +115,7 @@ export const Result: React.FC<ResultSummaryProps> = ({ allResultsRows }) => {
                             align={column.align}
                             sx={{ border: "1px solid #ddd" }}
                           >
-                            {column.id === "isCorrected"
+                            {column.id === "isCorrect"
                               ? value
                                 ? "◯"
                                 : "✕" // 正誤の表示を修正

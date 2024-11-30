@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { Box, Button } from "@mui/material";
 
@@ -115,6 +115,7 @@ export const Exercise: React.FC = () => {
   };
 
   const handleResult = () => {
+    console.log(allResults);
     if (allResults.length === questions.length) {
       setIsQuizComplete(true);
     }
@@ -126,7 +127,14 @@ export const Exercise: React.FC = () => {
 
   // `questions`が空でないことを確認する条件付きレンダリング
   if (questions.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Page login={true}>
+          <div>ヒットした問題がありませんでした</div>
+          <Link to={"/questionselection"}>戻る</Link>
+        </Page>
+      </>
+    );
   }
 
   return (
