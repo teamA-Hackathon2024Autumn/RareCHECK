@@ -40,7 +40,7 @@ services:
     networks:
       - app_network
     environment:
-      - DATABASE_URI=mysql://user:password@db/rarecheck
+      - DATABASE_URI=${DATABASE_URI}
     depends_on:
       - db
 
@@ -50,10 +50,10 @@ services:
       dockerfile: Dockerfile
     platform: linux/x86_64
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: rarecheck
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     networks:
