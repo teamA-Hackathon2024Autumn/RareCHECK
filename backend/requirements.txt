@@ -5,3 +5,4 @@ flask-cors
 Flask-Session
 pytz
 bcrypt
+python-dotenv

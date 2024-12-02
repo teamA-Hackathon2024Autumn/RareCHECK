@@ -10,19 +10,22 @@ import traceback
 import random
 import pytz
 import bcrypt
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 app = Flask(__name__)
 # CORS(app)  # CORSを有効にする
 # CORS が有効だとリクエストが通らない（front→localhost:3000, backend→localhost:5000）
 CORS(app, supports_credentials=True) 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://user:password@db/rarecheck'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # セッション用のシークレットキー、環境変数ファイルに移す
-app.config['SECRET_KEY'] = 'rarecheck_secret_key'  
-app.config['SESSION_TYPE'] = 'filesystem'  # セッションをファイルに保存
-app.config['SESSION_COOKIE_HTTPONLY'] = True # HttpOnly を有効化
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SESSION_TYPE'] = os.getenv('SESSION_TYPE', 'filesystem')
+app.config['SESSION_COOKIE_HTTPONLY'] = os.getenv('SESSION_COOKIE_HTTPONLY', 'True').lower() == 'true'
 
 # sqlalchemyの初期化
 db.init_app(app)
