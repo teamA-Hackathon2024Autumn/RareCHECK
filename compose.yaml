@@ -1,8 +1,9 @@
 services:
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    container_name: rarecheck_frontend_container
     ports:
       - "3000:3000"
     develop:
@@ -22,8 +23,9 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/Dockerfile
+    container_name: rarecheck_backend_container
     ports:
       - "5000:5000"
     develop:
@@ -48,6 +50,7 @@ services:
     build:
       context: ./db
       dockerfile: Dockerfile
+    container_name: rarecheck_db_container
     platform: linux/x86_64
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

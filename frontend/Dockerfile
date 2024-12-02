@@ -4,11 +4,11 @@ FROM node:18
 WORKDIR /app
 
 # 依存関係をコピー
-COPY package.json ./
+COPY ./frontend/package.json ./
 RUN npm install
 
 # ソースコードをコピー
-COPY . .
+COPY ./frontend/ .
 
 # Viteのビルド
 RUN npm run build
